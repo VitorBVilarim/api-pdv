@@ -9,14 +9,13 @@ const verificarLogin = require('../intermediarios/verificar-login')
 
 rotas.post('/usuario', validarCorpoRequisicao(schemaUsuario), cadastrarUsuario)
 rotas.post('/login', login)
-rotas.get('/usuario', verificarLogin, detalharPerfilUsuario)
-rotas.put('/usuario', verificarLogin, validarCorpoRequisicao(schemaUsuario), editarPerfilUsuario);
-
 
 
 rotas.use(verificarLogin)
 
-rotas.get('/categorias', listarCategorias)
+rotas.get('/usuario', detalharPerfilUsuario)
+rotas.put('/usuario', validarCorpoRequisicao(schemaUsuario), editarPerfilUsuario);
 
+rotas.get('/categorias', listarCategorias)
 
 module.exports = rotas

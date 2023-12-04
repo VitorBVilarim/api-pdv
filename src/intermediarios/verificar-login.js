@@ -19,7 +19,7 @@ async function verificarLogin(req, res, next) {
             return res.status(401).json({ mensagem: "Para acessar este recurso um token de autenticação válido deve ser enviado." });
         }
 
-        const { senha, ...usuario } = usuarioLogado;
+        const { senha, ...usuario } = usuarioLogado[0];
 
         req.usuario = usuario;
 

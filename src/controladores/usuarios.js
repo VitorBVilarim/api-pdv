@@ -45,7 +45,7 @@ async function login (req, res) {
         const { senha: senhaUsuario, ...usuarioLogado } = existeUsuario[0];
 
         const senhaCorreta = await bcrypt.compare(senha, senhaUsuario);
-console.log(senhaCorreta);
+
         if (!senhaCorreta) {
             return res.status(400).json({ mensagem: "Email e/ou senha inválido(s)." });
         }
@@ -58,54 +58,46 @@ console.log(senhaCorreta);
         });
 
     } catch (error) {
-        console.log(error.message);
         return res.status(500).json({ mensagem: "Erro interno do servidor." })
     }
 };
 
 async function detalharPerfilUsuario(req, res) {
+    const usuario = req.usuario;
     try {
-        const { id } = req.usuario;
 
-        const perfilUsuario = await knex('usuarios').where({ id });
+        return res.status(200).json(usuario);
 
-        if (!perfilUsuario) {
-            return res.status(404).json({ mensagem: 'Perfil de usuário não encontrado.' });
-        }
-
-        const { senha, ...perfilSemSenha } = perfilUsuario;
-
-        return res.status(200).json(perfilSemSenha);
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
     }
 }
 
 async function editarPerfilUsuario(req, res) {
     const { nome, email, senha } = req.body;
-    const { id } = req.usuario;
+    const usuario = req.usuario;
 
     try {
-
-        if (!nome || !email || !senha) {
-            return res.status(400).json({ mensagem: 'Os campos nome, email e senha são obrigatórios.' });
+        const existeEmail = await consultarUsuario('email', email)
+        if (existeEmail.length > 0) {
+            if (existeEmail[0].email !== usuario.email) {
+                return res.status(400).json({ mensagem: 'Ja existe usuario cadastrado com o email informado.' });
+            }
         }
 
         const senhaCriptografada = await bcrypt.hash(senha, 10);
 
         const perfilEditado = await knex('usuarios')
-            .where('id', id)
+            .where('id', usuario.id)
             .update({
                 nome,
                 email,
                 senha: senhaCriptografada,
             })
-            .returning(['nome', 'email']);
+            .returning(['id', 'nome', 'email']);
 
         return res.status(200).json(perfilEditado);
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
     }
 }
