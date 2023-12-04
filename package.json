@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "![](https://i.imgur.com/xG74tOh.png)",
   "main": "index.js",
-  "scripts": {
-    "dev": "nodemon ./src/index.js"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -19,7 +17,5 @@
     "knex": "^3.0.1",
     "pg": "^8.11.3"
   },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
-  }
+  "devDependencies": {}
 }
