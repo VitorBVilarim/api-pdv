@@ -63,8 +63,56 @@ console.log(senhaCorreta);
     }
 };
 
+async function detalharPerfilUsuario(req, res) {
+    try {
+        const { id } = req.usuario;
+
+        const perfilUsuario = await knex('usuarios').where({ id });
+
+        if (!perfilUsuario) {
+            return res.status(404).json({ mensagem: 'Perfil de usuário não encontrado.' });
+        }
+
+        const { senha, ...perfilSemSenha } = perfilUsuario;
+
+        return res.status(200).json(perfilSemSenha);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+    }
+}
+
+async function editarPerfilUsuario(req, res) {
+    const { nome, email, senha } = req.body;
+    const { id } = req.usuario;
+
+    try {
+
+        if (!nome || !email || !senha) {
+            return res.status(400).json({ mensagem: 'Os campos nome, email e senha são obrigatórios.' });
+        }
+
+        const senhaCriptografada = await bcrypt.hash(senha, 10);
+
+        const perfilEditado = await knex('usuarios')
+            .where('id', id)
+            .update({
+                nome,
+                email,
+                senha: senhaCriptografada,
+            })
+            .returning(['nome', 'email']);
+
+        return res.status(200).json(perfilEditado);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+    }
+}
 
 module.exports = {
     cadastrarUsuario,
-    login
+    login,
+    detalharPerfilUsuario,
+    editarPerfilUsuario
 }
