@@ -192,3 +192,4 @@ Fazer deploy do projeto e disponibilizar a URL.
 - Vitor Emanuel Brito Vilarim
 - Neidson Chaves Santos
 - Erick Daniel Alvarado Ascanio
+
