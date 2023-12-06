@@ -90,8 +90,27 @@ async function detalharProduto(req, res) {
         return res.status(500).json({ message: 'Erro interno no servidor' })
     }
 }
+
+async function deletarProduto(req, res) {
+    const { id } = req.params;
+    try {
+        const produto = await knex('produtos').where({ id: id }).returning('*')
+
+        if (produto.length < 1) {
+            return res.status(404).json({ message: 'o Produto informado não existe!' })
+        }
+
+        await knex("produtos").delete().where({ id: id })
+
+        return res.status(200).json(produto[0])
+    } catch (error) {
+        return res.status(500).json({ message: 'Erro interno no servidor' })
+    }
+}
+
 module.exports = {
     cadastrarProduto,
     atualizarProduto,
-    detalharProduto
+    detalharProduto,
+    deletarProduto
 }

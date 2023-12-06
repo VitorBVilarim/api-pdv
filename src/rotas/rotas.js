@@ -24,5 +24,6 @@ rotas.post('/produto', validarCorpoRequisicao(schemaProduto), controllersProduto
 rotas.put('/produto/:id', validarCorpoRequisicao(schemaProduto), controllersProdutos.atualizarProduto)
 rotas.get('/produto')
 rotas.get('/produto/:id', controllersProdutos.detalharProduto)
+rotas.delete('/produto/:id', controllersProdutos.deletarProduto)
 
 module.exports = rotas
