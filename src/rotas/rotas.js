@@ -7,7 +7,7 @@ const validarCorpoRequisicao = require('../intermediarios/validar-corpo-requisic
 const schemaUsuario = require('../intermediarios/schema-usuario')
 const schemaProduto = require('../intermediarios/schema-produto')
 const verificarLogin = require('../intermediarios/verificar-login')
-const cadastrarProduto = require('../controladores/produtos')
+const controllersProdutos = require('../controladores/produtos')
 
 rotas.get('/categorias', listarCategorias)
 
@@ -20,7 +20,9 @@ rotas.use(verificarLogin)
 rotas.get('/usuario', detalharPerfilUsuario)
 rotas.put('/usuario', validarCorpoRequisicao(schemaUsuario), editarPerfilUsuario);
 
-rotas.post('/produto', validarCorpoRequisicao(schemaProduto), cadastrarProduto)
-
+rotas.post('/produto', validarCorpoRequisicao(schemaProduto), controllersProdutos.cadastrarProduto)
+rotas.put('/produto/:id', validarCorpoRequisicao(schemaProduto), controllersProdutos.atualizarProduto)
+rotas.get('/produto')
+rotas.get('/produto/:id', controllersProdutos.detalharProduto)
 
 module.exports = rotas
