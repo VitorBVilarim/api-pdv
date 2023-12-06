@@ -35,13 +35,13 @@ create table produtos(
 
 create table clientes(
 id serial primary key,
-nome varchar(30) not null,
-email text unique not null,
-cpf text unique not null,
-cep text not null,
-rua text not null,
-numero int not null,
-bairro text not null,
-cidade text not null,
-estado text not null
+nome varchar(30) ,
+email text unique,
+cpf text unique ,
+cep text ,
+rua text ,
+numero int ,
+bairro text ,
+cidade text ,
+estado text 
 );

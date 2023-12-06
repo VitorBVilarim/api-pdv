@@ -79,7 +79,7 @@ async function listarProdutos(req, res) {
             const produtos = await knex("produtos").where({ categoria_id: categoria_id }).select('*')
 
             if (produtos.length < 1) {
-                return res.status(404).json({ message: ' Não existe nenhum produto com a categoria informada!' })
+                return res.status(200).json(produtos)
             }
 
             return res.status(200).json(produtos)
