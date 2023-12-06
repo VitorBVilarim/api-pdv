@@ -72,6 +72,27 @@ async function atualizarProduto(req, res) {
     }
 }
 
+async function listarProdutos(req, res) {
+    const { categoria_id } = req.query
+    try {
+        if (categoria_id) {
+            const produtos = await knex("produtos").where({ categoria_id: categoria_id }).select('*')
+
+            if (produtos.length < 1) {
+                return res.status(404).json({ message: ' Não existe nenhum produto com a categoria informada!' })
+            }
+
+            return res.status(200).json(produtos)
+        }
+
+        const produtos = await knex("produtos").select('*')
+
+        return res.status(200).json(produtos)
+    } catch (error) {
+        return res.status(500).json({ message: 'Erro interno no servidor' })
+    }
+}
+
 async function detalharProduto(req, res) {
     const { id } = req.params
     try {
@@ -111,6 +132,7 @@ async function deletarProduto(req, res) {
 module.exports = {
     cadastrarProduto,
     atualizarProduto,
+    listarProdutos,
     detalharProduto,
     deletarProduto
 }

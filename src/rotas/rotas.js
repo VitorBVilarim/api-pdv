@@ -22,7 +22,7 @@ rotas.put('/usuario', validarCorpoRequisicao(schemaUsuario), editarPerfilUsuario
 
 rotas.post('/produto', validarCorpoRequisicao(schemaProduto), controllersProdutos.cadastrarProduto)
 rotas.put('/produto/:id', validarCorpoRequisicao(schemaProduto), controllersProdutos.atualizarProduto)
-rotas.get('/produto')
+rotas.get('/produto', controllersProdutos.listarProdutos)
 rotas.get('/produto/:id', controllersProdutos.detalharProduto)
 rotas.delete('/produto/:id', controllersProdutos.deletarProduto)
 
