@@ -1,29 +1,23 @@
-const knex = require('../conexao/conexao'); 
-
-const schemaCliente = require('../intermediarios/schema-cliente');
+const knex = require('../conexao/conexao');
 
 async function cadastrarCliente(req, res) {
 
-    const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } = req.body;
-    const { id: idUsuarioLogado } = req.usuario;
+    const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } = req.body
 
     try {
 
-        await schemaCliente.validateAsync({ nome, email, cpf });
-
-        const emailExistente = await knex('clientes').where('email', email).first();
+        const emailExistente = await knex('clientes').where('email', email).first()
         if (emailExistente) {
-            return res.status(400).json({ mensagem: 'Este e-mail já está em uso por outro cliente.' });
+            return res.status(400).json({ mensagem: 'Este e-mail já está em uso por outro cliente.' })
         }
 
-        const cpfExistente = await knex('clientes').where('cpf', cpf).first();
+        const cpfExistente = await knex('clientes').where('cpf', cpf).first()
         if (cpfExistente) {
-            return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' });
+            return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' })
         }
 
         const clienteCadastrado = await knex('clientes')
             .insert({
-                id_usuario: idUsuarioLogado,
                 nome,
                 email,
                 cpf,
@@ -34,36 +28,32 @@ async function cadastrarCliente(req, res) {
                 cidade,
                 estado 
             })
-            .returning(['id', 'nome', 'email', 'cpf']);
+            .returning('*')
 
-        return res.status(201).json(clienteCadastrado);
+        return res.status(201).json(clienteCadastrado)
     } catch (error) {
-        console.error(error);
-        return res.status(400).json({ mensagem: error.message });
+        return res.status(500).json({ message: 'Erro interno no servidor' })
     }
 }
 
 async function atualizarCliente(req, res) {
 
-    const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } = req.body;
-    const { id: idUsuarioLogado } = req.usuario;
-    const { id: idCliente } = req.params;
+    const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } = req.body
+    const { id: idCliente } = req.params
 
     try {
 
-        const clienteExistente = await knex('clientes').where('id', idCliente).first();
+        const clienteExistente = await knex('clientes').where('id', idCliente).first()
         if (!clienteExistente) {
-            return res.status(404).json({ mensagem: 'Cliente não encontrado.' });
+            return res.status(404).json({ mensagem: 'Cliente não encontrado.' })
         }
-
-        await schemaCliente.validateAsync({ nome, email, cpf });
 
         const emailExistente = await knex('clientes')
             .where('email', email)
             .whereNot('id', idCliente)
             .first();
         if (emailExistente) {
-            return res.status(400).json({ mensagem: 'Este e-mail já está em uso por outro cliente.' });
+            return res.status(400).json({ mensagem: 'Este e-mail já está em uso por outro cliente.' })
         }
 
         const cpfExistente = await knex('clientes')
@@ -71,13 +61,12 @@ async function atualizarCliente(req, res) {
             .whereNot('id', idCliente)
             .first();
         if (cpfExistente) {
-            return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' });
+            return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' })
         }
 
         const clienteAtualizado = await knex('clientes')
             .where('id', idCliente)
-            .update({
-                id_usuario: idUsuarioLogado,
+            .update({ // se ja tiver endereço cadastrado e na atualizaão nao passar nada sobreescreve como null?
                 nome,
                 email,
                 cpf,
@@ -88,16 +77,47 @@ async function atualizarCliente(req, res) {
                 cidade,
                 estado
             })
-            .returning(['id', 'nome', 'email', 'cpf']);
+            .returning(['id', 'nome', 'email', 'cpf']) // retornar tudo?
 
-        return res.status(200).json(clienteAtualizado);
+        return res.status(200).json(clienteAtualizado)
     } catch (error) {
-        console.error(error);
-        return res.status(400).json({ mensagem: error.message });
+        return res.status(500).json({ message: 'Erro interno no servidor' })
+    }
+}
+
+async function listarClientes(req, res) {
+    try {
+        const clientes = await knex("clientes")
+
+        return res.status(200).json(clientes)
+    } catch (error) {
+        return res.status(500).json({ message: 'Erro interno no servidor' })
+    }
+}
+
+async function detalharCliente(req, res) {
+    const { id } = req.params
+   
+    try {
+        if (!id) {
+            return res.status(400).json({ message: 'Informe o id do cliente que deseja detalhar!' })
+        }
+
+        const cliente = await knex('clientes').where({ id: id })
+
+        if (cliente.length < 1) {
+            return res.status(404).json({ message: 'o Cliente informado não existe!' })
+        }
+
+        res.status(200).json(cliente[0])
+    } catch (error) {
+        return res.status(500).json({ message: 'Erro interno no servidor' })
     }
 }
 
 module.exports = {
   cadastrarCliente,
   atualizarCliente,
+  listarClientes,
+  detalharCliente
 };

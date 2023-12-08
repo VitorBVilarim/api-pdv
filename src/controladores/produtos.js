@@ -77,7 +77,7 @@ async function listarProdutos(req, res) {
     try {
         if (categoria_id) {
             const produtos = await knex("produtos").where({ categoria_id: categoria_id }).select('*')
-
+            // validaçao necesaria?
             if (produtos.length < 1) {
                 return res.status(200).json(produtos)
             }
