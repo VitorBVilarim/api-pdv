@@ -43,8 +43,8 @@ rotas.get('/produto', listarProdutos)
 rotas.get('/produto/:id', detalharProduto)
 rotas.delete('/produto/:id', deletarProduto)
 
-rotas.post('/cliente', verificarLogin, validarCorpoRequisicao(schemaCliente), cadastrarCliente);
-rotas.put('/cliente/:id', verificarLogin, validarCorpoRequisicao(schemaCliente), atualizarCliente);
+rotas.post('/cliente', validarCorpoRequisicao(schemaCliente), cadastrarCliente);
+rotas.put('/cliente/:id', validarCorpoRequisicao(schemaCliente), atualizarCliente);
 rotas.get('/cliente', listarClientes)
 rotas.get('/cliente/:id', detalharCliente)
 
