@@ -1,4 +1,4 @@
-const joi = require('joi')
+const joi = require('joi') 
 
 const schemaCliente = joi.object({
     nome: joi.string().required().messages({

@@ -16,18 +16,32 @@ async function cadastrarCliente(req, res) {
             return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' })
         }
 
+        const dadosCliente = {
+            nome,
+            email,
+            cpf
+        }
+        if (cep) {
+            dadosCliente.cep = cep
+        }
+        if (rua) {
+            dadosCliente.rua = rua
+        }
+        if (numero) {
+            dadosCliente.numero = numero
+        }
+        if (bairro) {
+            dadosCliente.bairro = bairro
+        }
+        if (cidade) {
+            dadosCliente.cidade = cidade
+        }
+        if (estado) {
+            dadosCliente.estado = estado
+        }
+        console.log(dadosCliente);
         const clienteCadastrado = await knex('clientes')
-            .insert({
-                nome,
-                email,
-                cpf,
-                cep,
-                rua,
-                numero,
-                bairro,
-                cidade,
-                estado 
-            })
+            .insert(dadosCliente)
             .returning('*')
 
         return res.status(201).json(clienteCadastrado)
@@ -51,7 +65,7 @@ async function atualizarCliente(req, res) {
         const emailExistente = await knex('clientes')
             .where('email', email)
             .whereNot('id', idCliente)
-            .first();
+            .first()
         if (emailExistente) {
             return res.status(400).json({ mensagem: 'Este e-mail já está em uso por outro cliente.' })
         }
@@ -59,24 +73,36 @@ async function atualizarCliente(req, res) {
         const cpfExistente = await knex('clientes')
             .where('cpf', cpf)
             .whereNot('id', idCliente)
-            .first();
+            .first()
         if (cpfExistente) {
             return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' })
         }
-
+        const dadosCliente= {
+            nome,
+            email,
+            cpf
+        }
+        if (cep) {
+            dadosCliente.cep = cep
+        }
+        if (rua) {
+            dadosCliente.rua = rua
+        }
+        if (numero) {
+            dadosCliente.numero = numero
+        }
+        if (bairro) {
+            dadosCliente.bairro = bairro
+        }
+        if (cidade) {
+            dadosCliente.cidade = cidade
+        }
+        if (estado) {
+            dadosCliente.estado = estado
+        }
         const clienteAtualizado = await knex('clientes')
             .where('id', idCliente)
-            .update({ // se ja tiver endereço cadastrado e na atualizaão nao passar nada sobreescreve como null?
-                nome,
-                email,
-                cpf,
-                cep,
-                rua,
-                numero,
-                bairro,
-                cidade,
-                estado
-            })
+            .update(dadosCliente)
             .returning(['id', 'nome', 'email', 'cpf']) // retornar tudo?
 
         return res.status(200).json(clienteAtualizado)
