@@ -41,6 +41,9 @@ async function atualizarProduto(req, res) {
         if (!id) {
             return res.status(400).json({ message: 'Informe qual produto deseja editar!' })
         }
+        if (!Number(id)) {
+            return res.status(400).json({ message: 'O id informado deve ser um numero valido!' })
+        }
 
         const produto = await knex('produtos').where({ id: id }).returning('*')
 
@@ -76,12 +79,11 @@ async function listarProdutos(req, res) {
     const { categoria_id } = req.query
     try {
         if (categoria_id) {
-            const produtos = await knex("produtos").where({ categoria_id: categoria_id }).select('*')
-            // validaçao necesaria?
-            if (produtos.length < 1) {
-                return res.status(200).json(produtos)
+            if (!Number(categoria_id)) {
+                return res.status(400).json({ message: 'O id da categoria deve ser um numero valido!' })
             }
-
+            const produtos = await knex("produtos").where({ categoria_id: categoria_id }).select('*')
+            
             return res.status(200).json(produtos)
         }
 
@@ -99,7 +101,9 @@ async function detalharProduto(req, res) {
         if (!id) {
             return res.status(400).json({ message: 'Informe qual produto deseja detalhar!' })
         }
-
+        if (!Number(id)) {
+            return res.status(400).json({ message: 'O id informado deve ser um numero valido!' })
+        }
         const produto = await knex('produtos').where({ id: id }).returning('*')
 
         if (produto.length < 1) {
@@ -115,6 +119,9 @@ async function detalharProduto(req, res) {
 async function deletarProduto(req, res) {
     const { id } = req.params;
     try {
+        if (!Number(id)) {
+            return res.status(400).json({ message: 'O id informado deve ser um numero valido!' })
+        }
         const produto = await knex('produtos').where({ id: id }).returning('*')
 
         if (produto.length < 1) {

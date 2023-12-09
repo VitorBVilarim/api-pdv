@@ -16,7 +16,31 @@ const schemaCliente = joi.object({
         'any.required': 'O campo CPF é obrigatório',
         'string.empty': 'O campo CPF é obrigatório',
         'string.min': 'o CPF informado não existe!',
-    })
+    }),
+
+    cep: joi.string().messages({
+        'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
+    }),
+    
+    rua: joi.string().messages({
+        'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
+    }),
+    
+    numero: joi.string().messages({
+        'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
+    }),
+    
+    bairro: joi.string().messages({
+        'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
+    }),
+    
+    cidade: joi.string().messages({
+        'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
+    }),
+    
+    estado: joi.string().messages({
+        'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
+    }),
 })
 
 module.exports = schemaCliente

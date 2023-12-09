@@ -31,7 +31,6 @@ rotas.get('/categorias', listarCategorias)
 rotas.post('/usuario', validarCorpoRequisicao(schemaUsuario), cadastrarUsuario)
 rotas.post('/login', login)
 
-
 rotas.use(verificarLogin)
 
 rotas.get('/usuario', detalharPerfilUsuario)

@@ -1,4 +1,5 @@
 const knex = require('../conexao/conexao');
+const obterDadosCliente = require('../intermediarios/obter-dados-cliente');
 
 async function cadastrarCliente(req, res) {
 
@@ -16,30 +17,8 @@ async function cadastrarCliente(req, res) {
             return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' })
         }
 
-        const dadosCliente = {
-            nome,
-            email,
-            cpf
-        }
-        if (cep) {
-            dadosCliente.cep = cep
-        }
-        if (rua) {
-            dadosCliente.rua = rua
-        }
-        if (numero) {
-            dadosCliente.numero = numero
-        }
-        if (bairro) {
-            dadosCliente.bairro = bairro
-        }
-        if (cidade) {
-            dadosCliente.cidade = cidade
-        }
-        if (estado) {
-            dadosCliente.estado = estado
-        }
-        console.log(dadosCliente);
+        const dadosCliente = obterDadosCliente(req, res)
+
         const clienteCadastrado = await knex('clientes')
             .insert(dadosCliente)
             .returning('*')
@@ -56,7 +35,9 @@ async function atualizarCliente(req, res) {
     const { id: idCliente } = req.params
 
     try {
-
+        if (!Number(idCliente)) {
+            return res.status(400).json({ message: 'O id informado deve ser um numero valido!' })
+        }
         const clienteExistente = await knex('clientes').where('id', idCliente).first()
         if (!clienteExistente) {
             return res.status(404).json({ mensagem: 'Cliente não encontrado.' })
@@ -77,36 +58,17 @@ async function atualizarCliente(req, res) {
         if (cpfExistente) {
             return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' })
         }
-        const dadosCliente= {
-            nome,
-            email,
-            cpf
-        }
-        if (cep) {
-            dadosCliente.cep = cep
-        }
-        if (rua) {
-            dadosCliente.rua = rua
-        }
-        if (numero) {
-            dadosCliente.numero = numero
-        }
-        if (bairro) {
-            dadosCliente.bairro = bairro
-        }
-        if (cidade) {
-            dadosCliente.cidade = cidade
-        }
-        if (estado) {
-            dadosCliente.estado = estado
-        }
+        
+        const dadosCliente = obterDadosCliente(req, res)
+
         const clienteAtualizado = await knex('clientes')
             .where('id', idCliente)
             .update(dadosCliente)
-            .returning(['id', 'nome', 'email', 'cpf']) // retornar tudo?
+            .returning('*')
 
         return res.status(200).json(clienteAtualizado)
     } catch (error) {
+        console.log(error.message);
         return res.status(500).json({ message: 'Erro interno no servidor' })
     }
 }
@@ -123,10 +85,14 @@ async function listarClientes(req, res) {
 
 async function detalharCliente(req, res) {
     const { id } = req.params
-   
+    
+     
     try {
         if (!id) {
             return res.status(400).json({ message: 'Informe o id do cliente que deseja detalhar!' })
+        }
+        if (!Number(id)) {
+            return res.status(400).json({ message: 'O id informado deve ser um numero valido!' })
         }
 
         const cliente = await knex('clientes').where({ id: id })
