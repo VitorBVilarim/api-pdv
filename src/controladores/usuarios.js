@@ -15,21 +15,12 @@ async function cadastrarUsuario(req, res) {
         const senhaCriptografada = await bcrypt.hash(senha, 10);
 
         const cadastroUsuario = await knex('usuarios')
-<<<<<<< HEAD
         .insert({
             nome,
             email,
             senha: senhaCriptografada
         })
         .returning(['id', 'nome', 'email'])
-=======
-            .insert({
-                nome,
-                email,
-                senha: senhaCriptografada
-            })
-            .returning(['nome', 'email'])
->>>>>>> master
 
         return res.status(201).json(cadastroUsuario);
 
