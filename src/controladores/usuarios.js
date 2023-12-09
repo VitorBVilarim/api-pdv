@@ -8,19 +8,28 @@ async function cadastrarUsuario(req, res) {
 
     try {
         const existeEmail = await consultarUsuario('email', email)
-        
+
         if (existeEmail.length > 0) {
             return res.status(400).json({ mensagem: 'Ja existe usuario cadastrado com o email informado.' });
         }
         const senhaCriptografada = await bcrypt.hash(senha, 10);
 
         const cadastroUsuario = await knex('usuarios')
+<<<<<<< HEAD
         .insert({
             nome,
             email,
             senha: senhaCriptografada
         })
         .returning(['id', 'nome', 'email'])
+=======
+            .insert({
+                nome,
+                email,
+                senha: senhaCriptografada
+            })
+            .returning(['nome', 'email'])
+>>>>>>> master
 
         return res.status(201).json(cadastroUsuario);
 
@@ -29,7 +38,7 @@ async function cadastrarUsuario(req, res) {
     }
 };
 
-async function login (req, res) {
+async function login(req, res) {
     const { email, senha } = req.body;
 
     if (!email || !senha) {
@@ -58,6 +67,7 @@ async function login (req, res) {
         });
 
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ mensagem: "Erro interno do servidor." })
     }
 };
