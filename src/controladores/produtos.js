@@ -11,6 +11,14 @@ async function cadastrarProduto(req, res) {
             return res.status(404).json({ message: 'Não foi possivel encontrar a categoria informada!' })
         }
 
+        if (quantidade_estoque < 0) {
+            return res.status(400).json({ message: 'Valores negativos não são permitidos no campo Quantidade em Estoque!' })
+        }
+
+        if (valor < 1) {
+            return res.status(400).json({ message: 'Digite um valor valido para o produto!' })
+        }
+
         const insertProduto = await knex("produtos").insert({
             descricao,
             quantidade_estoque,
@@ -43,6 +51,14 @@ async function atualizarProduto(req, res) {
         }
         if (!Number(id)) {
             return res.status(400).json({ message: 'O id informado deve ser um numero valido!' })
+        }
+
+        if (quantidade_estoque < 0) {
+            return res.status(400).json({ message: 'Valores negativos não são permitidos no campo Quantidade em Estoque!' })
+        }
+
+        if (valor < 1) {
+            return res.status(400).json({ message: 'Digite um valor valido para o produto!' })
         }
 
         const produto = await knex('produtos').where({ id: id }).returning('*')
@@ -83,8 +99,13 @@ async function listarProdutos(req, res) {
                 return res.status(400).json({ message: 'O id da categoria deve ser um numero valido!' })
             }
             const produtos = await knex("produtos").where({ categoria_id: categoria_id }).select('*')
-            
+
+            if (produtos.length < 1) {
+                return res.status(404).json({ message: 'Não foi Encontrado um produto para a categoria informada!' })
+            }
+
             return res.status(200).json(produtos)
+
         }
 
         const produtos = await knex("produtos").select('*')
