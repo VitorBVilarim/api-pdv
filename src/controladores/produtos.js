@@ -149,6 +149,12 @@ async function deletarProduto(req, res) {
             return res.status(404).json({ message: 'o Produto informado não existe!' })
         }
 
+        const isProductInOrder = await knex('pedido_produtos').where({ produto_id: id })
+
+        if (isProductInOrder.length > 0) {
+            return res.status(400).json({ message: 'Não foi possivel excluir o produto, Pois o Produto informado esta registrado em um pedido!' })
+        }
+
         await knex("produtos").delete().where({ id: id })
 
         return res.status(200).json(produto[0])
