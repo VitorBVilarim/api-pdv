@@ -155,13 +155,20 @@ async function deletarProduto(req, res) {
             return res.status(400).json({ message: 'Não foi possivel excluir o produto, Pois o Produto informado esta registrado em um pedido!' })
         }
 
+        const produto_imagem = await knex('produtos').where({ id: id }).select('produto_imagem')
+        const caminhoArquivo = produto_imagem[0].produto_imagem
+
+        await deletarImagem(caminhoArquivo)
+
         await knex("produtos").delete().where({ id: id })
 
         return res.status(200).json(produto[0])
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ message: 'Erro interno no servidor' })
     }
 }
+
 
 module.exports = {
     cadastrarProduto,
