@@ -1,93 +1,124 @@
 const knex = require('../conexao/conexao');
 const consultarCategoria = require('../utils/consultar-categoria');
+const { inserirImagem } = require('../utils/storage');
 
 
 async function cadastrarProduto(req, res) {
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
+    const {file} = req
+
     try {
         const categoria = await consultarCategoria('id', categoria_id)
-
+        
         if (categoria.length < 1) {
-            return res.status(404).json({ message: 'Não foi possivel encontrar a categoria informada!' })
+            return res.status(404).json({ mensagem: 'Não foi possivel encontrar a categoria informada!' })
         }
-
+        
         if (quantidade_estoque < 0) {
-            return res.status(400).json({ message: 'Valores negativos não são permitidos no campo Quantidade em Estoque!' })
+            return res.status(400).json({ mensagem: 'Valores negativos não são permitidos no campo Quantidade em Estoque!' })
         }
-
+        
         if (valor < 1) {
-            return res.status(400).json({ message: 'Digite um valor valido para o produto!' })
+            return res.status(400).json({ mensagem: 'Digite um valor valido para o produto!' })
         }
+        
+        const produto_imagem = await inserirImagem(
+            `produtos/${file.originalname}`,
+            file.buffer,
+            file.mimetype
+        )
+        const url = `https://${process.env.BACKBLAZE_BUCKET}.${process.env.ENDPOINT_S3}/${produto_imagem.path}`
 
-        const insertProduto = await knex("produtos").insert({
+        const inserirProduto = await knex("produtos").insert({
             descricao,
             quantidade_estoque,
             valor,
-            categoria_id
+            categoria_id,
+            produto_imagem: produto_imagem.path
         }).returning('id')
 
         return res.status(201).json({
-            id: insertProduto[0].id,
+            id: inserirProduto[0].id,
             descricao,
             quantidade_estoque,
             valor,
-            categoria: categoria[0].descricao
+            categoria: categoria[0].descricao,
+            produto_imagem: url
         })
 
     } catch (error) {
-        return res.status(500).json({ message: 'Erro interno no servidor' })
+        return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 }
 
 
 async function atualizarProduto(req, res) {
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
+    const {file} = req
 
     const { id } = req.params;
 
     try {
         if (!id) {
-            return res.status(400).json({ message: 'Informe qual produto deseja editar!' })
+            return res.status(400).json({ mensagem: 'Informe qual produto deseja editar!' })
         }
         if (!Number(id)) {
-            return res.status(400).json({ message: 'O id informado deve ser um numero valido!' })
+            return res.status(400).json({ mensagem: 'O id informado deve ser um numero valido!' })
         }
 
         if (quantidade_estoque < 0) {
-            return res.status(400).json({ message: 'Valores negativos não são permitidos no campo Quantidade em Estoque!' })
+            return res.status(400).json({ mensagem: 'Valores negativos não são permitidos no campo Quantidade em Estoque!' })
         }
 
         if (valor < 1) {
-            return res.status(400).json({ message: 'Digite um valor valido para o produto!' })
+            return res.status(400).json({ mensagem: 'Digite um valor valido para o produto!' })
         }
 
         const produto = await knex('produtos').where({ id: id }).returning('*')
 
         if (produto.length < 1) {
-            return res.status(404).json({ message: 'o Produto informado não existe!' })
+            return res.status(404).json({ mensagem: 'o Produto informado não existe!' })
         }
 
         const categoria = await consultarCategoria('id', categoria_id)
 
         if (categoria.length < 1) {
-            return res.status(404).json({ message: 'Não foi possivel encontrar a categoria informada!' })
+            return res.status(404).json({ mensagem: 'Não foi possivel encontrar a categoria informada!' })
         }
 
+        if (!file) {
+            const produto_imagem = await inserirImagem(
+                `produtos/${file.originalname}`,
+                file.buffer,
+                file.mimetype
+            )
+            const url = `https://${process.env.BACKBLAZE_BUCKET}.${process.env.ENDPOINT_S3}/${produto_imagem.path}`
+        } else {
+            const produto_imagem = {
+                path: null
+            }
+            const url = null
+            
+        }
         await knex("produtos").update({
             descricao,
             quantidade_estoque,
             valor,
-            categoria_id
+            categoria_id,
+            produto_imagem: produto_imagem.path
         }).where({ id: id })
 
         return res.status(200).json({
             descricao,
             quantidade_estoque,
             valor,
-            categoria: categoria[0].descricao
+            categoria: categoria[0].descricao,
+            produto_imagem: url
+
         })
     } catch (error) {
-        return res.status(500).json({ message: 'Erro interno no servidor' })
+        console.log(error.message);
+        return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 }
 
@@ -96,12 +127,12 @@ async function listarProdutos(req, res) {
     try {
         if (categoria_id) {
             if (!Number(categoria_id)) {
-                return res.status(400).json({ message: 'O id da categoria deve ser um numero valido!' })
+                return res.status(400).json({ mensagem: 'O id da categoria deve ser um numero valido!' })
             }
             const produtos = await knex("produtos").where({ categoria_id: categoria_id }).select('*')
 
             if (produtos.length < 1) {
-                return res.status(404).json({ message: 'Não foi Encontrado um produto para a categoria informada!' })
+                return res.status(404).json({ mensagem: 'Não foi Encontrado um produto para a categoria informada!' })
             }
 
             return res.status(200).json(produtos)
@@ -112,7 +143,7 @@ async function listarProdutos(req, res) {
 
         return res.status(200).json(produtos)
     } catch (error) {
-        return res.status(500).json({ message: 'Erro interno no servidor' })
+        return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 }
 
@@ -120,20 +151,20 @@ async function detalharProduto(req, res) {
     const { id } = req.params
     try {
         if (!id) {
-            return res.status(400).json({ message: 'Informe qual produto deseja detalhar!' })
+            return res.status(400).json({ mensagem: 'Informe qual produto deseja detalhar!' })
         }
         if (!Number(id)) {
-            return res.status(400).json({ message: 'O id informado deve ser um numero valido!' })
+            return res.status(400).json({ mensagem: 'O id informado deve ser um numero valido!' })
         }
         const produto = await knex('produtos').where({ id: id }).returning('*')
 
         if (produto.length < 1) {
-            return res.status(404).json({ message: 'o Produto informado não existe!' })
+            return res.status(404).json({ mensagem: 'o Produto informado não existe!' })
         }
 
         res.status(200).json(produto[0])
     } catch (error) {
-        return res.status(500).json({ message: 'Erro interno no servidor' })
+        return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 }
 
@@ -141,18 +172,18 @@ async function deletarProduto(req, res) {
     const { id } = req.params;
     try {
         if (!Number(id)) {
-            return res.status(400).json({ message: 'O id informado deve ser um numero valido!' })
+            return res.status(400).json({ mensagem: 'O id informado deve ser um numero valido!' })
         }
         const produto = await knex('produtos').where({ id: id }).returning('*')
 
         if (produto.length < 1) {
-            return res.status(404).json({ message: 'o Produto informado não existe!' })
+            return res.status(404).json({ mensagem: 'o Produto informado não existe!' })
         }
 
         const isProductInOrder = await knex('pedido_produtos').where({ produto_id: id })
 
         if (isProductInOrder.length > 0) {
-            return res.status(400).json({ message: 'Não foi possivel excluir o produto, Pois o Produto informado esta registrado em um pedido!' })
+            return res.status(400).json({ mensagem: 'Não foi possivel excluir o produto, Pois o Produto informado esta registrado em um pedido!' })
         }
 
         const produto_imagem = await knex('produtos').where({ id: id }).select('produto_imagem')
@@ -165,7 +196,7 @@ async function deletarProduto(req, res) {
         return res.status(200).json(produto[0])
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ message: 'Erro interno no servidor' })
+        return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 }
 

@@ -1,5 +1,6 @@
 const express = require('express')
 const rotas = express()
+const multer = require('../multer')
 
 const { listarCategorias } = require('../controladores/categorias')
 const { 
@@ -36,8 +37,8 @@ rotas.use(verificarLogin)
 rotas.get('/usuario', detalharPerfilUsuario)
 rotas.put('/usuario', validarCorpoRequisicao(schemaUsuario), editarPerfilUsuario);
 
-rotas.post('/produto', validarCorpoRequisicao(schemaProduto), cadastrarProduto)
-rotas.put('/produto/:id', validarCorpoRequisicao(schemaProduto), atualizarProduto)
+rotas.post('/produto', multer.single('produto_imagem'), validarCorpoRequisicao(schemaProduto), cadastrarProduto)
+rotas.put('/produto/:id', multer.single('produto_imagem'), validarCorpoRequisicao(schemaProduto), atualizarProduto)
 rotas.get('/produto', listarProdutos)
 rotas.get('/produto/:id', detalharProduto)
 rotas.delete('/produto/:id', deletarProduto)
