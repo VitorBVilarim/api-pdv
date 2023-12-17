@@ -22,12 +22,19 @@ async function cadastrarProduto(req, res) {
             return res.status(400).json({ mensagem: 'Digite um valor valido para o produto!' })
         }
         
-        const produto_imagem = await inserirImagem(
-            `produtos/${file.originalname}`,
-            file.buffer,
-            file.mimetype
-        )
-        const url = `https://${process.env.BACKBLAZE_BUCKET}.${process.env.ENDPOINT_S3}/${produto_imagem.path}`
+        let produto_imagem = {}
+        let url
+        if (file) {
+            produto_imagem = await inserirImagem(
+                `produtos/${file.originalname.replace(' ', '_')}`,
+                file.buffer,
+                file.mimetype
+            )
+            url = `https://${process.env.BACKBLAZE_BUCKET}.${process.env.ENDPOINT_S3}/${produto_imagem.path}`
+        } else {
+            produto_imagem.path = null
+            url = null
+        }
 
         const inserirProduto = await knex("produtos").insert({
             descricao,
@@ -86,20 +93,20 @@ async function atualizarProduto(req, res) {
             return res.status(404).json({ mensagem: 'Não foi possivel encontrar a categoria informada!' })
         }
 
-        if (!file) {
-            const produto_imagem = await inserirImagem(
-                `produtos/${file.originalname}`,
+        let produto_imagem = {}
+        let url
+        if (file) {
+            produto_imagem = await inserirImagem(
+                `produtos/${file.originalname.replace(' ', '_')}`,
                 file.buffer,
                 file.mimetype
             )
-            const url = `https://${process.env.BACKBLAZE_BUCKET}.${process.env.ENDPOINT_S3}/${produto_imagem.path}`
+            url = `https://${process.env.BACKBLAZE_BUCKET}.${process.env.ENDPOINT_S3}/${produto_imagem.path}`
         } else {
-            const produto_imagem = {
-                path: null
-            }
-            const url = null
-            
+            produto_imagem.path = null
+            url = null
         }
+        
         await knex("produtos").update({
             descricao,
             quantidade_estoque,
@@ -109,6 +116,7 @@ async function atualizarProduto(req, res) {
         }).where({ id: id })
 
         return res.status(200).json({
+            id,
             descricao,
             quantidade_estoque,
             valor,
@@ -117,7 +125,6 @@ async function atualizarProduto(req, res) {
 
         })
     } catch (error) {
-        console.log(error.message);
         return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 }
@@ -195,7 +202,6 @@ async function deletarProduto(req, res) {
 
         return res.status(200).json(produto[0])
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 }
