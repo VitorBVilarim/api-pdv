@@ -20,14 +20,16 @@ const {
     cadastrarCliente,
     atualizarCliente,
     listarClientes,
-    detalharCliente } = require('../controladores/clientes')
-
+    detalharCliente} = require('../controladores/clientes')
+const validarCorpoRequisicao = require('../intermediarios/validar-corpo-requisicao')
 const schemaUsuario = require('../intermediarios/schema-usuario')
 const schemaProduto = require('../intermediarios/schema-produto')
 const schemaCliente = require('../intermediarios/schema-cliente')
 
 const validarCorpoRequisicao = require('../intermediarios/validar-corpo-requisicao')
 const verificarLogin = require('../intermediarios/verificar-login')
+
+const mailController = require('../controladores/mail');
 
 rotas.get('/categorias', listarCategorias)
 
@@ -49,5 +51,8 @@ rotas.post('/cliente', validarCorpoRequisicao(schemaCliente), cadastrarCliente);
 rotas.put('/cliente/:id', validarCorpoRequisicao(schemaCliente), atualizarCliente);
 rotas.get('/cliente', listarClientes)
 rotas.get('/cliente/:id', detalharCliente)
+
+rotas.post('/pedido', cadastrarPedido);
+rotas.get('/pedido', listarPedidos);
 
 module.exports = rotas
