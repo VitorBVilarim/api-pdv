@@ -22,7 +22,7 @@ async function inserirImagem(path, buffer, mimetype) {
 
     return ({
         url: arquivo.Location,
-        patch: arquivo.Key
+        path: arquivo.Key
     })
 
 }

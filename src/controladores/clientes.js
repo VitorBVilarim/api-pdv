@@ -17,14 +17,16 @@ async function cadastrarCliente(req, res) {
             return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' })
         }
 
-        const dadosCliente = obterDadosCliente(req, res)
 
         const clienteCadastrado = await knex('clientes')
-            .insert(dadosCliente)
+            .insert({
+                nome, email, cpf, cep, rua, numero, bairro, cidade, estado
+            })
             .returning('*')
 
         return res.status(201).json(clienteCadastrado)
     } catch (error) {
+        console.log(error.message);
         return res.status(500).json({ message: 'Erro interno no servidor' })
     }
 }
@@ -59,12 +61,21 @@ async function atualizarCliente(req, res) {
             return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' })
         }
         
-        const dadosCliente = obterDadosCliente(req, res)
-
         const clienteAtualizado = await knex('clientes')
+            .update({
+                nome,
+                 email,
+                  cpf,
+                   cep: cep || null, 
+                   rua: rua || null, 
+                   numero: numero || null, 
+                   bairro: bairro || null, 
+                   cidade: cidade || null, 
+                   estado: estado || null
+            })
             .where('id', idCliente)
-            .update(dadosCliente)
             .returning('*')
+            .debug()
 
         return res.status(200).json(clienteAtualizado)
     } catch (error) {
