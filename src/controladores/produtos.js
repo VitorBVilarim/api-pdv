@@ -1,5 +1,6 @@
 const knex = require('../conexao/conexao');
 const consultarCategoria = require('../utils/consultar-categoria');
+const { deletarImagem } = require('../utils/storage');
 
 
 async function cadastrarProduto(req, res) {
