@@ -26,10 +26,11 @@ const schemaUsuario = require('../intermediarios/schema-usuario')
 const schemaProduto = require('../intermediarios/schema-produto')
 const schemaCliente = require('../intermediarios/schema-cliente')
 
-const validarCorpoRequisicao = require('../intermediarios/validar-corpo-requisicao')
-const verificarLogin = require('../intermediarios/verificar-login')
+const { 
+    cadastrarPedido,
+    listarPedidos } = require('../controladores/pedido')
 
-const mailController = require('../controladores/mail');
+const verificarLogin = require('../intermediarios/verificar-login')
 
 rotas.get('/categorias', listarCategorias)
 
