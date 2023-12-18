@@ -25,7 +25,7 @@ async function cadastrarProduto(req, res) {
         let url
         if (file) {
             produto_imagem = await inserirImagem(
-                `produtos/${file.originalname.replace(' ', '_')}`,
+                `produtos/${file.originalname.replace(' ', '_')}.replace('')`,
                 file.buffer,
                 file.mimetype
             )

@@ -11,21 +11,27 @@ const cadastrarPedido = async (req, res) => {
         }
 
         const clienteExistente = await knex('clientes').where('id', cliente_id).first();
+
         if (!clienteExistente) {
             return res.status(404).json({ mensagem: 'Cliente não encontrado.' });
         }
 
-        const validarProdutos = await Promise.all(pedido_produtos.map(async (produto) => {
-            const { produto_id, quantidade_produto } = produto;
+        let valor_total = 0
 
+        const validarProdutos = await pedido_produtos.forEach(async (produto) => {
+            const { produto_id, quantidade_produto } = produto;
             const produtoExistente = await knex('produtos').where('id', produto_id).first();
+
+
             if (!produtoExistente) {
                 return res.status(404).json({ mensagem: `Produto com ID ${produto_id} não encontrado.` });
             }
 
             if (produtoExistente.quantidade_estoque < quantidade_produto) {
-                return res.status(400).json({ mensagem: `Estoque insuficiente para o produto com ID ${produto_id}.` });
+                return false
             }
+
+            valor_total += produtoExistente.valor * quantidade_produto
 
             await knex('produtos')
                 .where('id', produto_id)
@@ -34,8 +40,13 @@ const cadastrarPedido = async (req, res) => {
             return {
                 produto_id,
                 quantidade_produto,
+                valor: produtoExistente.valor
             };
-        }));
+        });
+        console.log(validarProdutos)
+        if (!validarProdutos[0]) {
+            return res.status(400).json({ mensagem: `Estoque insuficiente para o produto.` });
+        }
 
         if (validarProdutos.some(validacao => !validacao)) {
             return res.status(400).json({ mensagem: 'Erro ao validar produtos.' });
@@ -43,16 +54,17 @@ const cadastrarPedido = async (req, res) => {
 
         const pedidoCadastrado = await knex('pedidos')
             .insert({
-                id_usuario: idUsuarioLogado,
-                id_cliente: cliente_id,
+                cliente_id,
                 observacao,
+                valor_total
             })
             .returning('id');
 
-        await knex('pedidos_produtos').insert(validarProdutos.map(produto => ({
-            id_pedido: pedidoCadastrado[0],
-            id_produto: produto.produto_id,
-            quantidade: produto.quantidade_produto,
+        await knex('pedido_produtos').insert(validarProdutos.map(produto => ({
+            pedido_id: pedidoCadastrado[0].id,
+            produto_id: produto.produto_id,
+            quantidade_produto: produto.quantidade_produto,
+            valor_produto: produto.valor
         })));
 
         await enviarEmail(clienteExistente.email, 'Pedido Efetuado com Sucesso', 'Obrigado por fazer o pedido!');
