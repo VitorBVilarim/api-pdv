@@ -1,7 +1,7 @@
-function obterDadosCliente (req, res) {
+function obterDadosCliente(req, res) {
     const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } = req.body
-    
-    const dadosCliente= {
+
+    const dadosCliente = {
         nome,
         email,
         cpf
