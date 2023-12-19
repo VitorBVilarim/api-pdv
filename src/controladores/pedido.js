@@ -139,13 +139,13 @@ const listarPedidos = async (req, res) => {
         });
 
         return res.status(200).json(resultadosFormatados);
+
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
     }
-}
+};
 
 module.exports = {
     cadastrarPedido,
-    listarPedidos
+    listarPedidos,
 };
