@@ -4,6 +4,7 @@ const { deletarImagem, inserirImagem } = require('../utils/storage');
 
 async function cadastrarProduto(req, res) {
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
+
     const { file } = req
 
     try {
@@ -21,18 +22,18 @@ async function cadastrarProduto(req, res) {
             return res.status(400).json({ mensagem: 'Digite um valor valido para o produto!' })
         }
 
-        let produto_imagem = {}
-        let url
+        let produto_imagem = null
+        let url = null
+        
         if (file) {
-            produto_imagem = await inserirImagem(
+            const adicionarImagem= await inserirImagem(
                 `produtos/${file.originalname.replace(' ', '_')}`,
                 file.buffer,
                 file.mimetype
             )
-            url = `https://${process.env.BACKBLAZE_BUCKET}.${process.env.ENDPOINT_S3}/${produto_imagem.path}`
-        } else {
-            produto_imagem.path = null
-            url = null
+            url = adicionarImagem.url
+
+            produto_imagem = `produtos/${file.originalname.replace(' ', '_')}`
         }
 
         const inserirProduto = await knex("produtos").insert({
@@ -40,7 +41,7 @@ async function cadastrarProduto(req, res) {
             quantidade_estoque,
             valor,
             categoria_id,
-            produto_imagem: produto_imagem.path
+            produto_imagem
         }).returning('id')
 
         return res.status(201).json({
@@ -92,18 +93,18 @@ async function atualizarProduto(req, res) {
             return res.status(404).json({ mensagem: 'Não foi possivel encontrar a categoria informada!' })
         }
 
-        let produto_imagem = {}
-        let url
+        let produto_imagem = null
+        let url = null
+        
         if (file) {
-            produto_imagem = await inserirImagem(
+            const adicionarImagem= await inserirImagem(
                 `produtos/${file.originalname.replace(' ', '_')}`,
                 file.buffer,
                 file.mimetype
             )
-            url = `https://${process.env.BACKBLAZE_BUCKET}.${process.env.ENDPOINT_S3}/${produto_imagem.path}`
-        } else {
-            produto_imagem.path = null
-            url = null
+            url = adicionarImagem.url
+
+            produto_imagem = `produtos/${file.originalname.replace(' ', '_')}`
         }
 
         await knex("produtos").update({
@@ -111,7 +112,7 @@ async function atualizarProduto(req, res) {
             quantidade_estoque,
             valor,
             categoria_id,
-            produto_imagem: produto_imagem.path
+            produto_imagem
         }).where({ id: id })
 
         return res.status(200).json({

@@ -17,7 +17,6 @@ async function cadastrarPedido(req, res) {
             return res.status(404).json({ message: 'O cliente informado não consta no nosso sistema!' });
         }
 
-        let produtos = [];
         let valor_total = 0;
         let indexErro = 0;
         let indexErroProdutoInexistente = 0;
@@ -90,7 +89,6 @@ async function cadastrarPedido(req, res) {
 
         return res.status(201).json({ mensagem: 'Pedido cadastrado com sucesso.' });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: 'Erro interno no servidor!' });
     }
 }
@@ -124,7 +122,7 @@ const listarPedidos = async (req, res) => {
         }
 
         const pedidos = await query;
-    console.log(pedidos);
+
         if (!pedidos || pedidos.length === 0) {
             return res.status(404).json({ mensagem: 'Nenhum pedido encontrado.' });
         }
@@ -166,10 +164,10 @@ const listarPedidos = async (req, res) => {
                 });
             }
         });
-    console.log(resultadosFormatados.length)
+
         return res.status(200).json(resultadosFormatados);
+        
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
     }
 };
