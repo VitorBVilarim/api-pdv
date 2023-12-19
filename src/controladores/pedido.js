@@ -68,7 +68,7 @@ async function cadastrarPedido(req, res) {
                 observacao,
                 valor_total,
             })
-            .returning('id');
+            .returning('*');
 
         await knex('pedido_produtos').insert(
             validacaoProduto.map(produto => ({
@@ -87,7 +87,7 @@ async function cadastrarPedido(req, res) {
 
         await enviarEmail(clienteExistente.email, 'Pedido Efetuado com Sucesso', 'Obrigado por fazer o pedido!');
 
-        return res.status(201).json({ mensagem: 'Pedido cadastrado com sucesso.' });
+        return res.status(201).json(pedidoCadastrado);
     } catch (error) {
         return res.status(500).json({ message: 'Erro interno no servidor!' });
     }
