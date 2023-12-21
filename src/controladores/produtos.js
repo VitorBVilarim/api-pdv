@@ -107,19 +107,20 @@ async function atualizarProduto(req, res) {
             produto_imagem = `produtos/${file.originalname.replace(' ', '_')}`
         }
 
-        await knex("produtos").update({
+        const produtoAtualizado = await knex("produtos").update({
             descricao,
             quantidade_estoque,
             valor,
             categoria_id,
             produto_imagem
         }).where({ id: id })
+        .returning('*')
 
         return res.status(200).json({
-            id,
-            descricao,
-            quantidade_estoque,
-            valor,
+            id: produtoAtualizado[0].id,
+            descricao: produtoAtualizado[0].descricao,
+            quantidade_estoque: produtoAtualizado[0].quantidade_estoque,
+            valor: produtoAtualizado[0].valor,
             categoria: categoria[0].descricao,
             produto_imagem: url
 

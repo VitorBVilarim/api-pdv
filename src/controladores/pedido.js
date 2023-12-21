@@ -87,7 +87,7 @@ async function cadastrarPedido(req, res) {
 
         await enviarEmail(clienteExistente.email, 'Pedido Efetuado com Sucesso', 'Obrigado por fazer o pedido!');
 
-        return res.status(201).json(pedidoCadastrado);
+        return res.status(201).json(pedidoCadastrado[0]);
     } catch (error) {
         return res.status(500).json({ message: 'Erro interno no servidor!' });
     }
@@ -95,7 +95,6 @@ async function cadastrarPedido(req, res) {
 
 const listarPedidos = async (req, res) => {
     const { cliente_id } = req.query;
-
     try {
         let query = knex('pedidos')
             .select(

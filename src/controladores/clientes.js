@@ -1,5 +1,4 @@
 const knex = require('../conexao/conexao');
-const obterDadosCliente = require('../intermediarios/obter-dados-cliente');
 
 async function cadastrarCliente(req, res) {
 
@@ -24,7 +23,7 @@ async function cadastrarCliente(req, res) {
             })
             .returning('*')
 
-        return res.status(201).json(clienteCadastrado)
+        return res.status(201).json(clienteCadastrado[0])
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({ message: 'Erro interno no servidor' })
@@ -77,7 +76,7 @@ async function atualizarCliente(req, res) {
             .returning('*')
             .debug()
 
-        return res.status(200).json(clienteAtualizado)
+        return res.status(200).json(clienteAtualizado[0])
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({ message: 'Erro interno no servidor' })
@@ -99,14 +98,7 @@ async function detalharCliente(req, res) {
     
      
     try {
-        if (!id) {
-            return res.status(400).json({ message: 'Informe o id do cliente que deseja detalhar!' })
-        }
-        if (!Number(id)) {
-            return res.status(400).json({ message: 'O id informado deve ser um numero valido!' })
-        }
-
-        const cliente = await knex('clientes').where({ id: id })
+        const cliente = await knex('clientes').where({ id: Number(id) })
 
         if (cliente.length < 1) {
             return res.status(404).json({ message: 'o Cliente informado não existe!' })
