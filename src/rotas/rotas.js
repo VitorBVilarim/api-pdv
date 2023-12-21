@@ -34,7 +34,7 @@ const {
 
 const verificarLogin = require('../intermediarios/verificar-login')
 
-rotas.get('/categorias', listarCategorias)
+rotas.get('/categoria', listarCategorias)
 
 rotas.post('/usuario', validarCorpoRequisicao(schemaUsuario), cadastrarUsuario)
 rotas.post('/login', login)
