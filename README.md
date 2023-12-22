@@ -18,10 +18,10 @@
 
 ## Bibliotecas ultilizadas; 
 
-- Express: 
+####Express: 
 - Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
 
-- Dotenv:
+####Dotenv:
 Ultilizada para gerenciar as variaveis de ambiente dentro do projeto
 
 - Cors:
