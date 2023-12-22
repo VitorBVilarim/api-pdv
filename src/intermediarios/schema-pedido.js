@@ -11,7 +11,7 @@ const schemaPedido = joi.object({
         'string.base': 'a Observação deve ser do tipo texto(string)'
     }),
 
-    pedido_produtos: joi.array().items({
+    pedido_produtos: joi.array().required().items({
 
         produto_id: joi.number().required().messages({
             'any.required': 'o Id do produto é obrigatório',
@@ -24,6 +24,9 @@ const schemaPedido = joi.object({
             'number.empty': 'a Quantidade do produto é obrigatória',
             'number.base': 'a Quantidade precisa ser um numero!'
         })
+    }).messages({
+        'any.required': 'os Produtos do pedido são obrigatorios',
+        'number.empty': 'os Produtos do pedido são obrigatorios',
     }),
 
 

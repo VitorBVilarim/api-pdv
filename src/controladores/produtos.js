@@ -31,7 +31,7 @@ async function cadastrarProduto(req, res) {
                 file.buffer,
                 file.mimetype
             )
-            url = adicionarImagem.url
+            url = produto_imagem.url
 
             produto_imagem = `produtos/${file.originalname.replace(' ', '_')}`
         }
@@ -54,6 +54,7 @@ async function cadastrarProduto(req, res) {
         })
 
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 }
@@ -114,7 +115,7 @@ async function atualizarProduto(req, res) {
             categoria_id,
             produto_imagem
         }).where({ id: id })
-        .returning('*')
+            .returning('*')
 
         return res.status(200).json({
             id: produtoAtualizado[0].id,
