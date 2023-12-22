@@ -18,48 +18,40 @@
 
 ## Bibliotecas ultilizadas; 
 
-- express 
-Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
-|---------------------------------------------------------------------------------| 
+- express
+- **Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP** 
+
 
 
 - dotenv
-Ultilizada para gerenciar as variaveis de ambiente dentro do projeto
-|---------------------------------------------------------------------------------| 
+**Ultilizada para gerenciar as variaveis de ambiente dentro do projeto**
 
 - cors
- Usada para habilitar o Compartilhamento de Recursos entre Origens (CORS) 
-|---------------------------------------------------------------------------------| 
+** Usada para habilitar o Compartilhamento de Recursos entre Origens (CORS) **
 
 - joi
-Usada para a validação de dados baseada em esquemas, facilitando a verificação dos dados no Body, Query...
-|---------------------------------------------------------------------------------| 
+**Usada para a validação de dados baseada em esquemas, facilitando a verificação dos dados no Body, Query...**
 
 - aws-sdk
-Usada para facilitar a conexão com o servidor de armazenamento de imagens
-|---------------------------------------------------------------------------------| 
+**Usada para facilitar a conexão com o servidor de armazenamento de imagens**
 
 - multer
-é Usada para criação de um middleware que lida com dados multipart/form-data, que são usados no upload das imagens dos produtos. 
-|---------------------------------------------------------------------------------| 
+**é Usada para criação de um middleware que lida com dados multipart/form-data, que são usados no upload das imagens dos produtos. **
 
 - pg
-Ultilizada para fazer a conexão da API com o Banco de dados
-|---------------------------------------------------------------------------------| 
+**Ultilizada para fazer a conexão da API com o Banco de dados**
 
 - knex
-Ultilizada para facilitar a montagem da query sql de uma forma mais facil e limpa
-|---------------------------------------------------------------------------------| 
+**Ultilizada para facilitar a montagem da query sql de uma forma mais facil e limpa**
 
 - nodemailer
-Ultilizada para conectar a API com o servidor SMTP para envio de email'sdk
-|---------------------------------------------------------------------------------| 
+**Ultilizada para conectar a API com o servidor SMTP para envio de email'sdk**
 
 - bcrypt
-Ultilizada para criptografar a senha do usuario, trazendo mais segurança a API
+**Ultilizada para criptografar a senha do usuario, trazendo mais segurança a API**
 
 - jsonwebtoken
-Usado para autenticação &autorização do usuario, deixando a API mais segura.
+**Usado para autenticação &autorização do usuario, deixando a API mais segura.**
 
 ## Listar Categorias
 
