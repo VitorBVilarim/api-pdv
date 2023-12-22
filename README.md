@@ -18,39 +18,37 @@
 
 ## Bibliotecas ultilizadas; 
 
-- express
+- Express: 
 - Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
 
-
-
-- dotenv
+- Dotenv:
 Ultilizada para gerenciar as variaveis de ambiente dentro do projeto
 
-- cors
+- Cors:
  Usada para habilitar o Compartilhamento de Recursos entre Origens (CORS) 
 
-- joi
+- Joi:
 Usada para a validação de dados baseada em esquemas, facilitando a verificação dos dados no Body, Query...
 
-- aws-sdk
+- Aws-sdk: 
 Usada para facilitar a conexão com o servidor de armazenamento de imagens
 
-- multer
+- Multer:
 é Usada para criação de um middleware que lida com dados multipart/form-data, que são usados no upload das imagens dos produtos. 
 
-- pg
+- Pg:
 Ultilizada para fazer a conexão da API com o Banco de dados
 
-- knex
+- Knex:
 Ultilizada para facilitar a montagem da query sql de uma forma mais facil e limpa
 
-- nodemailer
+- Nodemailer:
 Ultilizada para conectar a API com o servidor SMTP para envio de email'sdk
 
-- bcrypt
+- Bcrypt:
 Ultilizada para criptografar a senha do usuario, trazendo mais segurança a API
 
-- jsonwebtoken
+- Jsonwebtoken:
   Usado para autenticação &autorização do usuario, deixando a API mais segura
 
 ## Listar Categorias
