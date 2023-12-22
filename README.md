@@ -19,7 +19,7 @@
 ## Bibliotecas ultilizadas; 
 
 - express
-- **Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP** 
+- Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
 
 
 
