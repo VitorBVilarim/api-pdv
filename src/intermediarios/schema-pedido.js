@@ -1,6 +1,6 @@
-const joi = require('joi')
+import joi from 'joi'
 
-const schemaPedido = joi.object({
+export const schemaPedido = joi.object({
     cliente_id: joi.number().required().messages({
         'any.required': 'o Id do cliente é obrigatório',
         'number.empty': 'o Id do cliente é obrigatório',
@@ -32,4 +32,3 @@ const schemaPedido = joi.object({
 
 })
 
-module.exports = schemaPedido

@@ -1,7 +1,6 @@
-const knex = require('../conexao/conexao');
+import { conexaoDb } from '../conexao/conexao.js'
 
-async function consultarCategoria(nomeCampo, campo) {
-    return await knex('categorias').where(`${nomeCampo}`, `${campo}`)
+export default async function consultarCategoria(nomeCampo, campo) {
+    return await conexaoDb('categorias').where(`${nomeCampo}`, `${campo}`)
 }
 
-module.exports = consultarCategoria

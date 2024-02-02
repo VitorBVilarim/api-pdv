@@ -1,9 +1,9 @@
-const knex = require('../conexao/conexao');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const consultarUsuario = require('../intermediarios/consultar-usuario');
+import { conexaoDb } from '../conexao/conexao.js'
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { consultarUsuario } from '../intermediarios/consultar-usuario.js';
 
-async function cadastrarUsuario(req, res) {
+export async function cadastrarUsuario(req, res) {
     const { nome, email, senha } = req.body;
 
     try {
@@ -14,13 +14,13 @@ async function cadastrarUsuario(req, res) {
         }
         const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-        const cadastroUsuario = await knex('usuarios')
-        .insert({
-            nome,
-            email,
-            senha: senhaCriptografada
-        })
-        .returning(['id', 'nome', 'email'])
+        const cadastroUsuario = await conexaoDb('usuarios')
+            .insert({
+                nome,
+                email,
+                senha: senhaCriptografada
+            })
+            .returning(['id', 'nome', 'email'])
 
         return res.status(201).json(cadastroUsuario);
 
@@ -29,7 +29,7 @@ async function cadastrarUsuario(req, res) {
     }
 };
 
-async function login(req, res) {
+export async function login(req, res) {
     const { email, senha } = req.body;
 
     if (!email || !senha) {
@@ -63,7 +63,7 @@ async function login(req, res) {
     }
 };
 
-async function detalharPerfilUsuario(req, res) {
+export async function detalharPerfilUsuario(req, res) {
     const usuario = req.usuario;
     try {
 
@@ -74,7 +74,7 @@ async function detalharPerfilUsuario(req, res) {
     }
 }
 
-async function editarPerfilUsuario(req, res) {
+export async function editarPerfilUsuario(req, res) {
     const { nome, email, senha } = req.body;
     const usuario = req.usuario;
 
@@ -88,7 +88,7 @@ async function editarPerfilUsuario(req, res) {
 
         const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-        const perfilEditado = await knex('usuarios')
+        const perfilEditado = await conexaoDb('usuarios')
             .where('id', usuario.id)
             .update({
                 nome,
@@ -101,11 +101,4 @@ async function editarPerfilUsuario(req, res) {
     } catch (error) {
         return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
     }
-}
-
-module.exports = {
-    cadastrarUsuario,
-    login,
-    detalharPerfilUsuario,
-    editarPerfilUsuario
 }

@@ -1,4 +1,4 @@
-const validarCorpoRequisicao = joiSchema => async (req, res, next) => {
+export const validarCorpoRequisicao = joiSchema => async (req, res, next) => {
 	try {
 		await joiSchema.validateAsync(req.body)
 		next()
@@ -7,4 +7,3 @@ const validarCorpoRequisicao = joiSchema => async (req, res, next) => {
 	}
 }
 
-module.exports = validarCorpoRequisicao

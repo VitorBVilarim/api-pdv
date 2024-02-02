@@ -1,17 +1,17 @@
-const knex = require('../conexao/conexao');
-const { enviarEmail } = require('../servicos/nodemailer');
+import { conexaoDb } from '../conexao/conexao.js'
+import { enviarEmail } from '../servicos/nodemailer.js';
 
-async function cadastrarPedido(req, res) {
+export async function cadastrarPedido(req, res) {
     const { cliente_id, observacao, pedido_produtos } = req.body;
 
     try {
-        const clienteExistente = await knex('clientes').where('id', cliente_id).first();
+        const clienteExistente = await conexaoDb('clientes').where('id', cliente_id).first();
 
         if (!clienteExistente) {
             return res.status(404).json({ mensagem: 'Cliente n達o encontrado.' });
         }
 
-        const cliente = await knex('clientes').where({ id: cliente_id });
+        const cliente = await conexaoDb('clientes').where({ id: cliente_id });
 
         if (cliente.length < 1) {
             return res.status(404).json({ message: 'O cliente informado n達o consta no nosso sistema!' });
@@ -23,7 +23,7 @@ async function cadastrarPedido(req, res) {
         let indexErroProdutoSemEstoque = 0;
 
         const validacaoProduto = await Promise.all(pedido_produtos.map(async produto => {
-            let produtoExistente = await knex('produtos').where({ id: produto.produto_id }).returning('*');
+            let produtoExistente = await conexaoDb('produtos').where({ id: produto.produto_id }).returning('*');
 
             if (produtoExistente.length < 1) {
                 indexErroProdutoInexistente += 1;
@@ -62,7 +62,7 @@ async function cadastrarPedido(req, res) {
             return res.status(400).json({ mensagem: 'O produto informado n達o existe!' });
         }
 
-        const pedidoCadastrado = await knex('pedidos')
+        const pedidoCadastrado = await conexaoDb('pedidos')
             .insert({
                 cliente_id,
                 observacao,
@@ -70,7 +70,7 @@ async function cadastrarPedido(req, res) {
             })
             .returning('*');
 
-        await knex('pedido_produtos').insert(
+        await conexaoDb('pedido_produtos').insert(
             validacaoProduto.map(produto => ({
                 pedido_id: pedidoCadastrado[0].id,
                 produto_id: produto.produto_id,
@@ -80,7 +80,7 @@ async function cadastrarPedido(req, res) {
         );
 
         validacaoProduto.map(async produto => {
-            await knex('produtos')
+            await conexaoDb('produtos')
                 .where('id', produto.produto_id)
                 .decrement('quantidade_estoque', produto.quantidade_produto);
         });
@@ -93,10 +93,10 @@ async function cadastrarPedido(req, res) {
     }
 }
 
-const listarPedidos = async (req, res) => {
+export const listarPedidos = async (req, res) => {
     const { cliente_id } = req.query;
     try {
-        let query = knex('pedidos')
+        let query = conexaoDb('pedidos')
             .select(
                 'pedidos.id',
                 'pedidos.valor_total',
@@ -111,7 +111,7 @@ const listarPedidos = async (req, res) => {
             .join('pedido_produtos', 'pedidos.id', '=', 'pedido_produtos.pedido_id');
 
         if (cliente_id) {
-            const clienteExistente = await knex('clientes').where('id', cliente_id).first();
+            const clienteExistente = await conexaoDb('clientes').where('id', cliente_id).first();
 
             if (!clienteExistente) {
                 return res.status(404).json({ mensagem: 'Cliente n達o encontrado.' });
@@ -169,7 +169,3 @@ const listarPedidos = async (req, res) => {
     }
 };
 
-module.exports = {
-    cadastrarPedido,
-    listarPedidos,
-};

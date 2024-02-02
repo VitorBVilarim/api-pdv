@@ -1,8 +1,8 @@
-const knex = require('../conexao/conexao')
+import { conexaoDb } from '../conexao/conexao.js'
 
-async function listarCategorias(req, res) {
+export default async function listarCategorias(req, res) {
     try {
-        const categorias = await knex('categorias').select('*')
+        const categorias = await conexaoDb('categorias').select('*')
 
         return res.status(200).json(categorias)
     } catch (error) {
@@ -12,6 +12,3 @@ async function listarCategorias(req, res) {
 }
 
 
-module.exports = {
-    listarCategorias,
-}

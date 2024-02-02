@@ -1,6 +1,6 @@
-const joi = require('joi')
+import joi from 'joi'
 
-const schemaUsuario = joi.object({
+export const schemaUsuario = joi.object({
 	nome: joi.string().required().messages({
 		'any.required': 'O campo nome é obrigatório',
 		'string.empty': 'O campo nome é obrigatório',
@@ -19,4 +19,3 @@ const schemaUsuario = joi.object({
 	})
 })
 
-module.exports = schemaUsuario

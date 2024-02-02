@@ -1,8 +1,8 @@
-const knex = require('../conexao/conexao');
-const consultarCategoria = require('../utils/consultar-categoria');
-const { deletarImagem, inserirImagem } = require('../utils/storage');
+import { conexaoDb } from '../conexao/conexao.js'
+import consultarCategoria from '../utils/consultar-categoria.js';
+import { deletarImagem, inserirImagem } from '../utils/storage.js';
 
-async function cadastrarProduto(req, res) {
+export async function cadastrarProduto(req, res) {
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
 
     const { file } = req
@@ -36,7 +36,7 @@ async function cadastrarProduto(req, res) {
             produto_imagem = `produtos/${file.originalname.replace(' ', '_')}`
         }
 
-        const inserirProduto = await knex("produtos").insert({
+        const inserirProduto = await conexaoDb("produtos").insert({
             descricao,
             quantidade_estoque,
             valor,
@@ -60,7 +60,7 @@ async function cadastrarProduto(req, res) {
 }
 
 
-async function atualizarProduto(req, res) {
+export async function atualizarProduto(req, res) {
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
     const { file } = req
 
@@ -82,7 +82,7 @@ async function atualizarProduto(req, res) {
             return res.status(400).json({ mensagem: 'Digite um valor valido para o produto!' })
         }
 
-        const produto = await knex('produtos').where({ id: id }).returning('*')
+        const produto = await conexaoDb('produtos').where({ id: id }).returning('*')
 
         if (produto.length < 1) {
             return res.status(404).json({ mensagem: 'o Produto informado não existe!' })
@@ -108,7 +108,7 @@ async function atualizarProduto(req, res) {
             produto_imagem = `produtos/${file.originalname.replace(' ', '_')}`
         }
 
-        const produtoAtualizado = await knex("produtos").update({
+        const produtoAtualizado = await conexaoDb("produtos").update({
             descricao,
             quantidade_estoque,
             valor,
@@ -131,14 +131,14 @@ async function atualizarProduto(req, res) {
     }
 }
 
-async function listarProdutos(req, res) {
+export async function listarProdutos(req, res) {
     const { categoria_id } = req.query
     try {
         if (categoria_id) {
             if (!Number(categoria_id)) {
                 return res.status(400).json({ mensagem: 'O id da categoria deve ser um numero valido!' })
             }
-            const produtos = await knex("produtos").where({ categoria_id: categoria_id }).select('*')
+            const produtos = await conexaoDb("produtos").where({ categoria_id: categoria_id }).select('*')
 
             if (produtos.length < 1) {
                 return res.status(404).json({ mensagem: 'Não foi Encontrado um produto para a categoria informada!' })
@@ -148,7 +148,7 @@ async function listarProdutos(req, res) {
 
         }
 
-        const produtos = await knex("produtos").select('*')
+        const produtos = await conexaoDb("produtos").select('*')
 
         return res.status(200).json(produtos)
     } catch (error) {
@@ -156,7 +156,7 @@ async function listarProdutos(req, res) {
     }
 }
 
-async function detalharProduto(req, res) {
+export async function detalharProduto(req, res) {
     const { id } = req.params
     try {
         if (!id) {
@@ -165,7 +165,7 @@ async function detalharProduto(req, res) {
         if (!Number(id)) {
             return res.status(400).json({ mensagem: 'O id informado deve ser um numero valido!' })
         }
-        const produto = await knex('produtos').where({ id: id }).returning('*')
+        const produto = await conexaoDb('produtos').where({ id: id }).returning('*')
 
         if (produto.length < 1) {
             return res.status(404).json({ mensagem: 'o Produto informado não existe!' })
@@ -177,25 +177,25 @@ async function detalharProduto(req, res) {
     }
 }
 
-async function deletarProduto(req, res) {
+export async function deletarProduto(req, res) {
     const { id } = req.params;
     try {
         if (!Number(id)) {
             return res.status(400).json({ mensagem: 'O id informado deve ser um numero valido!' })
         }
-        const produto = await knex('produtos').where({ id: id }).returning('*')
+        const produto = await conexaoDb('produtos').where({ id: id }).returning('*')
 
         if (produto.length < 1) {
             return res.status(404).json({ mensagem: 'o Produto informado não existe!' })
         }
 
-        const isProductInOrder = await knex('pedido_produtos').where({ produto_id: id })
+        const isProductInOrder = await conexaoDb('pedido_produtos').where({ produto_id: id })
 
         if (isProductInOrder.length > 0) {
             return res.status(400).json({ mensagem: 'Não foi possivel excluir o produto, Pois o Produto informado esta registrado em um pedido!' })
         }
 
-        const file = await knex('produtos').where({ id: id }).select('produto_imagem')
+        const file = await conexaoDb('produtos').where({ id: id }).select('produto_imagem')
 
         const { produto_imagem } = file[0]
 
@@ -203,7 +203,7 @@ async function deletarProduto(req, res) {
             await deletarImagem(produto_imagem)
         }
 
-        await knex("produtos").delete().where({ id: id })
+        await conexaoDb("produtos").delete().where({ id: id })
 
         return res.status(200).json(produto[0])
     } catch (error) {
@@ -211,11 +211,3 @@ async function deletarProduto(req, res) {
     }
 }
 
-
-module.exports = {
-    cadastrarProduto,
-    atualizarProduto,
-    listarProdutos,
-    detalharProduto,
-    deletarProduto
-}

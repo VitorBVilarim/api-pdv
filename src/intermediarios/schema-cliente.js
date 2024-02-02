@@ -1,6 +1,6 @@
-const joi = require('joi') 
+import joi from 'joi'
 
-const schemaCliente = joi.object({
+export const schemaCliente = joi.object({
     nome: joi.string().required().messages({
         'any.required': 'O campo nome é obrigatório',
         'string.empty': 'O campo nome é obrigatório',
@@ -21,26 +21,25 @@ const schemaCliente = joi.object({
     cep: joi.string().messages({
         'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
     }),
-    
+
     rua: joi.string().messages({
         'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
     }),
-    
+
     numero: joi.string().messages({
         'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
     }),
-    
+
     bairro: joi.string().messages({
         'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
     }),
-    
+
     cidade: joi.string().messages({
         'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
     }),
-    
+
     estado: joi.string().messages({
         'string.base': 'Os dados do endereço devem ser do tipo texto(string)'
     }),
 })
 
-module.exports = schemaCliente

@@ -1,195 +1,284 @@
-# desafio-backend-05-pdv
-![](https://i.imgur.com/xG74tOh.png)
 
-# Desafio Módulo 5 - Backend
+## PDV ( Ponto de Venda )
 
-Seja bem vindo(a) ao desafio do módulo 5.
+- API REST que serve como uma interface para a frente de caixa de um negócio. Ela possui várias funcionalidades essenciais para a operação de um negócio, incluindo                 
+ 
+ ## Link de Deploy da API para testes
+ - https://api-pdv-qkck.onrender.com/
+ 
+ ## Funcionalidades 
 
-Sua tarefa como desenvolvedor(a) será criar uma API para um PDV (Frente de Caixa). Esse será um projeto piloto, ou seja, no futuro outras funcionalidades serão implementadas.
+- Clientes: Permite a criação, leitura, atualização e exclusão de informações dos clientes. 
+
+- Produtos: Permite gerenciar o inventário de produtos. Os usuários podem adicionar novos produtos, atualizar informações de produtos existentes, ler informações de produtos e excluir produtos do sistema.
+
+- Pedidos: Permite gerenciar pedidos dos clientes. Os usuários podem criar novos pedidos, atualizar o status dos pedidos, visualizar detalhes dos pedidos e excluir pedidos.
+
+- Cadastro e Login de Usuário: A API também possui funcionalidades para o cadastro de novos usuários e login de usuários existentes. Isso permite que os usuários acessem o sistema e realizem suas tarefas.
+
+## Bibliotecas ultilizadas; 
+
+- express 
+Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
+|---------------------------------------------------------------------------------| 
 
 
-**Importante 1: Sempre que a validação de uma requisição falhar, responda com código de erro e mensagem adequada à situação, ok?**
+- dotenv
+Ultilizada para gerenciar as variaveis de ambiente dentro do projeto
+|---------------------------------------------------------------------------------| 
 
-**Importante 2: Para endpoints de cadastro/atualização os objetos de requisição devem conter as propriedades equivalentes as colunas das tabelas.**
+- cors
+ Usada para habilitar o Compartilhamento de Recursos entre Origens (CORS) 
+|---------------------------------------------------------------------------------| 
 
-**Exemplo:**
+- joi
+Usada para a validação de dados baseada em esquemas, facilitando a verificação dos dados no Body, Query...
+|---------------------------------------------------------------------------------| 
 
-```javascript
-// Corpo da requisição para cadastro de usuário (body)
-{
-    "nome": "José",
-    "email": "jose@email.com",
-    "senha": "jose"
-}
-```
+- aws-sdk
+Usada para facilitar a conexão com o servidor de armazenamento de imagens
+|---------------------------------------------------------------------------------| 
 
-**ATENÇÃO: Todos os endpoints deverão atender os requisitos citados acima.**
+- multer
+é Usada para criação de um middleware que lida com dados multipart/form-data, que são usados no upload das imagens dos produtos. 
+|---------------------------------------------------------------------------------| 
 
-## **Banco de dados**
+- pg
+Ultilizada para fazer a conexão da API com o Banco de dados
+|---------------------------------------------------------------------------------| 
 
-Você precisa criar um Banco de Dados PostgreSQL chamado `pdv`.
+- knex
+Ultilizada para facilitar a montagem da query sql de uma forma mais facil e limpa
+|---------------------------------------------------------------------------------| 
 
-**IMPORTANTE: Deverá ser criado no projeto o arquivo SQL que deverá ser o script contendo os comandos de criação das tabelas respeitando os nomes das tabelas e colunas respectivamente, além de, conter os comandos para a inserção das categorias que devem ser previamente cadastradas (estão citadas na 1ª Sprint no item Listar Categorias).**
+- nodemailer
+Ultilizada para conectar a API com o servidor SMTP para envio de email'sdk
+|---------------------------------------------------------------------------------| 
 
-## **Requisitos obrigatórios**
+- bcrypt
+Ultilizada para criptografar a senha do usuario, trazendo mais segurança a API
 
--   A API a ser criada deverá acessar o banco de dados a ser criado `pdv` para persistir e manipular os dados de categorias, clientes, pedidos, produtos e usuários utilizados pela aplicação.
--   O campo id das tabelas no banco de dados deve ser auto incremento, chave primária e não deve permitir edição uma vez criado.
--   Qualquer valor monetário deverá ser representado em centavos (Ex.: R$ 10,00 reais = 1000)
+- jsonwebtoken
+Usado para autenticação &autorização do usuario, deixando a API mais segura.
 
-## **Status Codes**
-
-Abaixo, listamos os possíveis **_status codes_** esperados como resposta da API.
-
-```javascript
-// 200 (OK) = requisição bem sucedida
-// 201 (Created) = requisição bem sucedida e algo foi criado
-// 204 (No Content) = requisição bem sucedida, sem conteúdo no corpo da resposta
-// 400 (Bad Request) = o servidor não entendeu a requisição pois está com uma sintaxe/formato inválido
-// 401 (Unauthorized) = o usuário não está autenticado (logado)
-// 403 (Forbidden) = o usuário não tem permissão de acessar o recurso solicitado
-// 404 (Not Found) = o servidor não pode encontrar o recurso solicitado
-// 500 (Internal Server Error) = erro inesperado do servidor
-```
-
-<details>
-<summary>1ª Sprint</summary>
-<br>
-
-<details>
-<summary><b>Banco de Dados</b></summary>
-<br>
-
-Crie as seguintes tabelas e colunas abaixo:
-
-**ATENÇÃO! Os nomes das tabelas e das colunas a serem criados devem seguir exatamente os nomes listados abaixo.**
-
--   usuarios
-    -   id
-    -   nome
-    -   email (campo único)
-    -   senha
--   categorias
-    -   id
-    -   descricao
-
-</details>
-
-<details>
-<summary><b>Listar categorias</b></summary>
+## Listar Categorias
 
 #### `GET` `/categoria`
 
 Essa é a rota que será chamada quando o usuário quiser listar todas as categorias cadastradas.
 
-As categorias a seguir precisam ser previamente cadastradas para que sejam listadas no endpoint de listagem das categorias.
 
-## **Categorias**
 
--   Informática
--   Celulares
--   Beleza e Perfumaria
--   Mercado
--   Livros e Papelaria
--   Brinquedos
--   Moda
--   Bebê
--   Games
-
-</details>
-
-<details>
-<summary><b>Cadastrar usuário</b></summary>
+## Cadastrar usuário
 
 #### `POST` `/usuario`
 
 Essa é a rota que será utilizada para cadastrar um novo usuário no sistema.
 
-Critérios de aceite:
+- Body:
 
-    - Validar os campos obrigatórios:
         - nome
         - email
         - senha
-    - A senha deve ser criptografada utilizando algum algoritmo de criptografia confiável.
-    - O campo e-mail no banco de dados deve ser único para cada registro, não permitindo dois usuários possuírem o mesmo e-mail.
+    
+     O campo e-mail no banco de dados deve ser único para cada registro, não permitindo dois usuários possuírem o mesmo e-mail.
 
-</details>
-
-<details>
-<summary><b>Efetuar login do usuário</b></summary>
-
-#### `POST` `/login`
+    #### `POST` `/login`
 
 Essa é a rota que permite o usuário cadastrado realizar o login no sistema.
 
-Critérios de aceite:
+- Body:
 
-    - Validar se o e-mail e a senha estão corretos para o usuário em questão.
-    - Gerar um token de autenticação para o usuário.
+        - email
+        - senha
 
-</details>
 
----
+## Observação: 
+- Todos os Endpoints a baixo necessita-se que seja passado o Token de Autenticação para " Confirmar Login"
 
-## **ATENÇÃO**: Todas as funcionalidades (endpoints) a seguir, a partir desse ponto, deverão exigir o token de autenticação do usuário logado, recebendo no header com o formato Bearer Token. Portanto, em cada funcionalidade será necessário validar o token informado.
 
----
-
-<details>
-<summary><b>Detalhar perfil do usuário logado</b></summary>
-
+## Listar Usuario
 #### `GET` `/usuario`
 
-Essa é a rota que permite o usuário logado a visualizar os dados do seu próprio perfil, de acordo com a validação do token de autenticação.
+- Essa é a rota que permite o usuário logado a visualizar os dados do seu próprio perfil, de acordo com a validação do token de autenticação.
 
-</details>
-
-<details>
-<summary><b>Editar perfil do usuário logado</b></summary>
-
+## Atualizar Usuario
 #### `PUT` `/usuario`
 
 Essa é a rota que permite o usuário logado atualizar informações de seu próprio cadastro, de acordo com a validação do token de autenticação.
 
-Critérios de aceite:
+Body:
 
-    - Validar os campos obrigatórios:
+    campos obrigatórios:
         - nome
         - email
         - senha
-    - A senha deve ser criptografada utilizando algum algoritmo de criptografia confiável.
-    - O campo e-mail no banco de dados deve ser único para cada registro, não permitindo dois usuários possuírem o mesmo e-mail.
+   
+   - O campo e-mail no banco de dados deve ser único para cada registro, não permitindo dois usuários possuírem o mesmo e-mail.
 
-</details>
+   ## Cadastrar Produto
+   #### `POST` `/produto`
 
-<details>
-<summary><b>Efetuar deploy da aplicação</b></summary>
-<br>
+- Essa é a rota que permite o usuário logado cadastrar um novo produto no sistema.
 
-Fazer deploy do projeto e disponibilizar a URL.
+Body:
 
-</details>
-
-</details>
-
----
-
-## Aulas úteis:
-
--   [Revisão pt1](https://aulas.cubos.academy/turma/41c6a64e-cfc7-4fc4-9b5d-21d8dfde4e6f/aulas/34df4763-689b-409c-894b-248dacd70d81)
--   [Revisão pt2](https://aulas.cubos.academy/turma/41c6a64e-cfc7-4fc4-9b5d-21d8dfde4e6f/aulas/6b733465-c761-40de-94ad-ac85a4129152)
--   [Git e fluxo de trabalho em equipe](https://aulas.cubos.academy/turma/41c6a64e-cfc7-4fc4-9b5d-21d8dfde4e6f/aulas/2812eee7-5ba5-4e62-b2d0-7b392ba6b870)
--   [Deploy](https://aulas.cubos.academy/turma/41c6a64e-cfc7-4fc4-9b5d-21d8dfde4e6f/aulas/4c75e05a-581d-427b-9cdc-527c1fab47b2)
--   [Envio de e-mails](https://aulas.cubos.academy/turma/41c6a64e-cfc7-4fc4-9b5d-21d8dfde4e6f/aulas/9ae4e70f-f502-41c5-af47-c22e9c0880a7)
--   [Validações e boas práticas](https://aulas.cubos.academy/turma/41c6a64e-cfc7-4fc4-9b5d-21d8dfde4e6f/aulas/19bcf6fa-5589-43ea-b6ed-a9817b9d51ae)
--   [Upload de arquivos](https://aulas.cubos.academy/turma/41c6a64e-cfc7-4fc4-9b5d-21d8dfde4e6f/aulas/a124ac7e-9db8-4007-9532-cf0e84c8a6cc)
+    
+        -   descricao
+        -   quantidade_estoque
+        -   valor
+        -   categoria_id
+        - produto_imagem (imagem escolhida) -  não é obrigatoria
 
 
-###### tags: `back-end` `módulo 5` `nodeJS` `PostgreSQL` `API REST` `desafio`
+## Atualizar Produto
+#### `PUT` `/produto/:id`
 
-## Colaboradores:
-- Vitor Emanuel Brito Vilarim
-- Neidson Chaves Santos
-- Erick Daniel Alvarado Ascanio
+Essa é a rota que permite o usuário logado a atualizar as informações de um produto cadastrado.
+
+Body:
+
+        -   descricao
+        -   quantidade_estoque
+        -   valor
+        -   categoria_id
+        - produto_imagem (imagem escolhida) -  não é obrigatoria
+
+## Listar Produtos
+#### `GET` `/produto`
+
+- Essa é a rota que será chamada quando o usuário logado quiser listar todos os produtos cadastrados.
+
+* Existe a query **categoria_id** para que seja possível consultar produtos por categorias, de modo, que serão filtrados de acordo com o id de uma categoria. 
+Exemplo: /produto?categoria_id=2
+
+
+Observações:
+
+    - Caso seja enviado o parâmetro do tipo query **categoria_id**, o Sistema vai filtrar os produtos de acordo com a categoria, caso o id de categoria informada exista.
+    - Caso não seja informado o parâmetro do tipo query **categoria_id** todos os produtos cadastrados irão ser retornados.
+
+## Listar Produto Especifico
+#### `GET` `/produto/:id`
+
+Essa é a rota que permite o usuário logado obter um de seus produtos cadastrados. 
+
+## Deletar Produto
+#### `DELETE` `/produto/:id`
+
+Essa é a rota que será chamada quando o usuário logado quiser excluir um de seus produtos cadastrados.  
+
+Observação:
+
+- o Produto não pode ser deletado caso esteja vinculado a algum pedido.
+
+## Cadastrar Cliente
+#### `POST` `/cliente`
+
+Essa é a rota que permite usuário logado cadastrar um novo cliente no sistema.
+
+Body:
+
+    
+        -   nome
+        -   email
+        -   cpf
+   
+   Observação:
+
+    - O campo e-mail no banco de dados é único para cada registro, não permitindo dois clientes possuírem o mesmo e-mail.
+    
+    - O campo cpf no banco de dados é único para cada registro, não permitindo dois clientes possuírem o mesmo cpf.
+
+## Atualizar Cliente
+#### `PUT` `/cliente/:id`
+
+Essa é a rota que permite o usuário realizar atualização de um cliente cadastrado.
+
+Body:
+
+        -   nome
+        -   email
+        -   cpf
+   
+     Observação:
+
+    - O campo e-mail no banco de dados é único para cada registro, não permitindo dois clientes possuírem o mesmo e-mail.
+    
+    - O campo cpf no banco de dados é único para cada registro, não permitindo dois clientes possuírem o mesmo cpf.
+
+
+## Listar Clientes 
+#### `GET` `/cliente`
+
+Essa é a rota que será chamada quando o usuário logado quiser listar todos os clientes cadastrados.
+
+## Listar Cliente Especifico
+#### `GET` `/cliente/:id`
+
+Essa é a rota que será chamada quando o usuário logado quiser obter um de seus clientes cadastrados.  
+
+## Cadastrar Pedido
+#### `POST` `/pedido`
+
+Essa é a rota que será utilizada para cadastrar um novo pedido no sistema.
+
+**Observação:** Cada pedido deverá conter ao menos um produto vinculado.
+
+**Atenção:** As propriedades produto_id e quantidade_produto devem ser informadas dentro de um array e para cada produto deverá ser criado um objeto neste array, como ilustrado no objeto de requisição abaixo.
+Só deverá será cadastrado o pedido caso todos produtos vinculados ao pedido realmente existão no banco de dados.
+
+
+-  Exemplo de Corpo da requisição para cadastro de pedido (body)
+{
+
+"cliente_id": 1,
+
+"observacao": "Em caso de ausência recomendo deixar com algum vizinho",
+
+"pedido_produtos": [
+
+        {
+            "produto_id": 1,
+            "quantidade_produto": 10
+        },
+        {
+            "produto_id": 2,
+            "quantidade_produto": 20
+        }
+   ]
+}
+
+Body:
+
+     campos obrigatórios:
+        -   cliente_id
+        -   pedido_produtos
+            -   produto_id
+            -   quantidade_produto
+
+
+##  Listar Pedidos
+#### `GET` `/pedido`
+
+Essa é a rota que será chamada quando o usuário logado quiser listar todos os pedidos cadastrados.
+
+- Observação: 
+ parâmetro do tipo query **cliente_id** para que seja possível consultar pedidos por clientes, de modo, que serão filtrados de acordo com o id de um cliente.
+
+ Exemplo: /pedido?cliente_id=1
+
+
+
+       
+
+
+
+    
+
+
+
+
+
+
 

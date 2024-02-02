@@ -1,23 +1,23 @@
-const knex = require('../conexao/conexao');
+import { conexaoDb } from '../conexao/conexao.js'
 
-async function cadastrarCliente(req, res) {
+export async function cadastrarCliente(req, res) {
 
     const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } = req.body
 
     try {
 
-        const emailExistente = await knex('clientes').where('email', email).first()
+        const emailExistente = await conexaoDb('clientes').where('email', email).first()
         if (emailExistente) {
             return res.status(400).json({ mensagem: 'Este e-mail já está em uso por outro cliente.' })
         }
 
-        const cpfExistente = await knex('clientes').where('cpf', cpf).first()
+        const cpfExistente = await conexaoDb('clientes').where('cpf', cpf).first()
         if (cpfExistente) {
             return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' })
         }
 
 
-        const clienteCadastrado = await knex('clientes')
+        const clienteCadastrado = await conexaoDb('clientes')
             .insert({
                 nome, email, cpf, cep, rua, numero, bairro, cidade, estado
             })
@@ -30,7 +30,7 @@ async function cadastrarCliente(req, res) {
     }
 }
 
-async function atualizarCliente(req, res) {
+export async function atualizarCliente(req, res) {
 
     const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } = req.body
     const { id: idCliente } = req.params
@@ -39,12 +39,12 @@ async function atualizarCliente(req, res) {
         if (!Number(idCliente)) {
             return res.status(400).json({ message: 'O id informado deve ser um numero valido!' })
         }
-        const clienteExistente = await knex('clientes').where('id', idCliente).first()
+        const clienteExistente = await conexaoDb('clientes').where('id', idCliente).first()
         if (!clienteExistente) {
             return res.status(404).json({ mensagem: 'Cliente não encontrado.' })
         }
 
-        const emailExistente = await knex('clientes')
+        const emailExistente = await conexaoDb('clientes')
             .where('email', email)
             .whereNot('id', idCliente)
             .first()
@@ -52,25 +52,25 @@ async function atualizarCliente(req, res) {
             return res.status(400).json({ mensagem: 'Este e-mail já está em uso por outro cliente.' })
         }
 
-        const cpfExistente = await knex('clientes')
+        const cpfExistente = await conexaoDb('clientes')
             .where('cpf', cpf)
             .whereNot('id', idCliente)
             .first()
         if (cpfExistente) {
             return res.status(400).json({ mensagem: 'Este CPF já está em uso por outro cliente.' })
         }
-        
-        const clienteAtualizado = await knex('clientes')
+
+        const clienteAtualizado = await conexaoDb('clientes')
             .update({
                 nome,
-                 email,
-                  cpf,
-                   cep: cep || null, 
-                   rua: rua || null, 
-                   numero: numero || null, 
-                   bairro: bairro || null, 
-                   cidade: cidade || null, 
-                   estado: estado || null
+                email,
+                cpf,
+                cep: cep || null,
+                rua: rua || null,
+                numero: numero || null,
+                bairro: bairro || null,
+                cidade: cidade || null,
+                estado: estado || null
             })
             .where('id', idCliente)
             .returning('*')
@@ -83,9 +83,9 @@ async function atualizarCliente(req, res) {
     }
 }
 
-async function listarClientes(req, res) {
+export async function listarClientes(req, res) {
     try {
-        const clientes = await knex("clientes")
+        const clientes = await conexaoDb("clientes")
 
         return res.status(200).json(clientes)
     } catch (error) {
@@ -93,12 +93,12 @@ async function listarClientes(req, res) {
     }
 }
 
-async function detalharCliente(req, res) {
+export async function detalharCliente(req, res) {
     const { id } = req.params
-    
-     
+
+
     try {
-        const cliente = await knex('clientes').where({ id: Number(id) })
+        const cliente = await conexaoDb('clientes').where({ id: Number(id) })
 
         if (cliente.length < 1) {
             return res.status(404).json({ message: 'o Cliente informado não existe!' })
@@ -110,9 +110,3 @@ async function detalharCliente(req, res) {
     }
 }
 
-module.exports = {
-  cadastrarCliente,
-  atualizarCliente,
-  listarClientes,
-  detalharCliente
-};

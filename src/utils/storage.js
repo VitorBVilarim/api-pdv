@@ -1,5 +1,7 @@
-const aws = require('aws-sdk');
-require("aws-sdk/lib/maintenance_mode_message").suppress = true
+import aws from 'aws-sdk';
+
+import config from "aws-sdk/lib/maintenance_mode_message.js"
+config.suppress = true
 
 const endpoint = new aws.Endpoint(process.env.ENDPOINT_S3)
 
@@ -11,7 +13,7 @@ const s3 = new aws.S3({
     }
 })
 
-async function inserirImagem(path, buffer, mimetype) {
+export async function inserirImagem(path, buffer, mimetype) {
 
     const arquivo = await s3.upload({
         Bucket: process.env.BACKBLAZE_BUCKET,
@@ -27,7 +29,7 @@ async function inserirImagem(path, buffer, mimetype) {
 
 }
 
-async function deletarImagem(path) {
+export async function deletarImagem(path) {
 
     await s3.deleteObject({
         Bucket: process.env.BACKBLAZE_BUCKET,
@@ -35,7 +37,4 @@ async function deletarImagem(path) {
     }).promise()
 }
 
-module.exports = {
-    inserirImagem,
-    deletarImagem
-}
+

@@ -1,4 +1,6 @@
-const knex = require('knex')({
+import knex from 'knex'
+
+export const conexaoDb = knex({
     client: 'pg',
     connection: {
         host: process.env.DB_HOST,
@@ -8,6 +10,4 @@ const knex = require('knex')({
         database: process.env.DB_NAME,
         ssl: { rejectUnauthorized: false }
     }
-});
-
-module.exports = knex;
+})

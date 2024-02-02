@@ -1,38 +1,46 @@
-const express = require('express')
-const rotas = express()
-const multer = require('../multer')
+import express from 'express'
 
-const { listarCategorias } = require('../controladores/categorias')
-const {
+import multer from '../multer.js'
+
+import listarCategorias from '../controladores/categorias.js'
+import {
     cadastrarUsuario,
     login,
     detalharPerfilUsuario,
     editarPerfilUsuario
-} = require('../controladores/usuarios')
-const {
+} from '../controladores/usuarios.js'
+import {
     cadastrarProduto,
     atualizarProduto,
     listarProdutos,
     detalharProduto,
     deletarProduto
-} = require('../controladores/produtos')
-const {
+} from '../controladores/produtos.js'
+import {
     cadastrarCliente,
     atualizarCliente,
     listarClientes,
-    detalharCliente } = require('../controladores/clientes')
+    detalharCliente
+} from '../controladores/clientes.js'
 
-const validarCorpoRequisicao = require('../intermediarios/validar-corpo-requisicao')
-const schemaUsuario = require('../intermediarios/schema-usuario')
-const schemaProduto = require('../intermediarios/schema-produto')
-const schemaCliente = require('../intermediarios/schema-cliente')
-const schemaPedido = require('../intermediarios/schema-pedido')
+import { validarCorpoRequisicao } from '../intermediarios/validar-corpo-requisicao.js'
 
-const {
+import { schemaUsuario } from '../intermediarios/schema-usuario.js'
+
+import { schemaProduto } from '../intermediarios/schema-produto.js'
+
+import { schemaCliente } from '../intermediarios/schema-cliente.js'
+
+import { schemaPedido } from '../intermediarios/schema-pedido.js'
+
+import {
     cadastrarPedido,
-    listarPedidos } = require('../controladores/pedido')
+    listarPedidos
+} from '../controladores/pedido.js'
 
-const verificarLogin = require('../intermediarios/verificar-login')
+import { verificarLogin } from '../intermediarios/verificar-login.js'
+
+export const rotas = express()
 
 rotas.get('/categoria', listarCategorias)
 
@@ -58,4 +66,3 @@ rotas.get('/cliente/:id', detalharCliente)
 rotas.post('/pedido', validarCorpoRequisicao(schemaPedido), cadastrarPedido);
 rotas.get('/pedido', listarPedidos);
 
-module.exports = rotas

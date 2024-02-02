@@ -1,11 +1,11 @@
-require('dotenv').config()
+import dotenv from 'dotenv/config.js'
 
-const cors = require('cors')
+import cors from 'cors'
 
-const express = require('express')
+import express from 'express'
 const app = express()
 
-const rotas = require('./rotas/rotas')
+import { rotas } from './rotas/rotas.js'
 
 app.use(cors())
 app.use(express.json())
@@ -15,3 +15,4 @@ app.use(rotas)
 const porta = process.env.PORT || 5432
 
 app.listen(porta, () => { console.log(`API Rodando na porta ${porta}`) })
+

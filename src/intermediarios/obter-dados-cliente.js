@@ -1,4 +1,4 @@
-function obterDadosCliente(req, res) {
+export function obterDadosCliente(req, res) {
     const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } = req.body
 
     const dadosCliente = {
@@ -28,4 +28,3 @@ function obterDadosCliente(req, res) {
     return dadosCliente
 }
 
-module.exports = obterDadosCliente

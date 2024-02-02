@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const knex = require('../conexao/conexao');
+import jwt from 'jsonwebtoken'
+import { conexaoDb } from '../conexao/conexao.js'
 
-async function verificarLogin(req, res, next) {
+export async function verificarLogin(req, res, next) {
     const { authorization } = req.headers;
 
     if (!authorization) {
@@ -13,8 +13,8 @@ async function verificarLogin(req, res, next) {
     try {
         const { id } = jwt.verify(token, process.env.SENHA_JWT);
 
-        const usuarioLogado = await knex('usuarios').where({id})
-      
+        const usuarioLogado = await conexaoDb('usuarios').where({ id })
+
         if (!usuarioLogado) {
             return res.status(401).json({ mensagem: "Para acessar este recurso um token de autenticação válido deve ser enviado." });
         }
@@ -30,4 +30,3 @@ async function verificarLogin(req, res, next) {
     }
 };
 
-module.exports = verificarLogin;
