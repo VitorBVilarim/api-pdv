@@ -7,6 +7,7 @@ const endpoint = new aws.Endpoint(process.env.ENDPOINT_S3)
 
 const s3 = new aws.S3({
     endpoint,
+    region: 'sa-east-1',
     credentials: {
         accessKeyId: process.env.KEY_ID,
         secretAccessKey: process.env.APP_KEY
@@ -16,7 +17,7 @@ const s3 = new aws.S3({
 export async function inserirImagem(path, buffer, mimetype) {
 
     const arquivo = await s3.upload({
-        Bucket: process.env.BACKBLAZE_BUCKET,
+        Bucket: process.env.S3_BUCKET,
         Key: path,
         Body: buffer,
         ContentType: mimetype
@@ -32,7 +33,7 @@ export async function inserirImagem(path, buffer, mimetype) {
 export async function deletarImagem(path) {
 
     await s3.deleteObject({
-        Bucket: process.env.BACKBLAZE_BUCKET,
+        Bucket: process.env.S3_BUCKET,
         Key: path
     }).promise()
 }

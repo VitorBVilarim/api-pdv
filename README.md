@@ -9,6 +9,7 @@
  ## Funcionalidades 
 
 - Clientes: Permite a criação, leitura, atualização e exclusão de informações dos clientes. 
+<<<<<<< HEAD
 
 - Produtos: Permite gerenciar o inventário de produtos. Os usuários podem adicionar novos produtos, atualizar informações de produtos existentes, ler informações de produtos e excluir produtos do sistema.
 
@@ -21,8 +22,12 @@
 - express 
 Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
 |---------------------------------------------------------------------------------| 
+=======
+>>>>>>> 92af266f4e91118180d6218f286e6ac1d93d28df
 
+- Produtos: Permite gerenciar o inventário de produtos. Os usuários podem adicionar novos produtos, atualizar informações de produtos existentes, ler informações de produtos e excluir produtos do sistema.
 
+<<<<<<< HEAD
 - dotenv
 Ultilizada para gerenciar as variaveis de ambiente dentro do projeto
 |---------------------------------------------------------------------------------| 
@@ -61,6 +66,47 @@ Ultilizada para criptografar a senha do usuario, trazendo mais segurança a API
 - jsonwebtoken
 Usado para autenticação &autorização do usuario, deixando a API mais segura.
 
+=======
+- Pedidos: Permite gerenciar pedidos dos clientes. Os usuários podem criar novos pedidos, atualizar o status dos pedidos, visualizar detalhes dos pedidos e excluir pedidos.
+
+- Cadastro e Login de Usuário: A API também possui funcionalidades para o cadastro de novos usuários e login de usuários existentes. Isso permite que os usuários acessem o sistema e realizem suas tarefas.
+
+## Bibliotecas ultilizadas; 
+
+- Express: 
+- Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
+
+- Dotenv:
+Ultilizada para gerenciar as variaveis de ambiente dentro do projeto
+
+- Cors:
+ Usada para habilitar o Compartilhamento de Recursos entre Origens (CORS) 
+
+- Joi:
+Usada para a validação de dados baseada em esquemas, facilitando a verificação dos dados no Body, Query...
+
+- Aws-sdk: 
+Usada para facilitar a conexão com o servidor de armazenamento de imagens
+
+- Multer:
+é Usada para criação de um middleware que lida com dados multipart/form-data, que são usados no upload das imagens dos produtos. 
+
+- Pg:
+Ultilizada para fazer a conexão da API com o Banco de dados
+
+- Knex:
+Ultilizada para facilitar a montagem da query sql de uma forma mais facil e limpa
+
+- Nodemailer:
+Ultilizada para conectar a API com o servidor SMTP para envio de email'sdk
+
+- Bcrypt:
+Ultilizada para criptografar a senha do usuario, trazendo mais segurança a API
+
+- Jsonwebtoken:
+  Usado para autenticação &autorização do usuario, deixando a API mais segura
+
+>>>>>>> 92af266f4e91118180d6218f286e6ac1d93d28df
 ## Listar Categorias
 
 #### `GET` `/categoria`

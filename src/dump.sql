@@ -29,7 +29,7 @@ create table produtos(
   descricao text not null,
   quantidade_estoque int not null,
   valor int not null,
-  categoria_id text references categorias(id)
+  categoria_id integer references categorias(id)
 );
 
 
