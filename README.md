@@ -18,65 +18,6 @@
 
 ## Bibliotecas ultilizadas; 
 
-- express 
-Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
-
-|---------------------------------------------------------------------------------| 
-
-
-- dotenv
-Ultilizada para gerenciar as variaveis de ambiente dentro do projeto
-
-|---------------------------------------------------------------------------------| 
-
-- cors
- Usada para habilitar o Compartilhamento de Recursos entre Origens (CORS) 
-
-|---------------------------------------------------------------------------------| 
-
-- joi
-Usada para a validação de dados baseada em esquemas, facilitando a verificação dos dados no Body, Query...
-
-|---------------------------------------------------------------------------------| 
-
-- aws-sdk
-Usada para facilitar a conexão com o servidor de armazenamento de imagens
-
-|---------------------------------------------------------------------------------| 
-
-- multer
-é Usada para criação de um middleware que lida com dados multipart/form-data, que são usados no upload das imagens dos produtos. 
-
-|---------------------------------------------------------------------------------| 
-
-- pg
-Ultilizada para fazer a conexão da API com o Banco de dados
-
-|---------------------------------------------------------------------------------| 
-
-- knex
-Ultilizada para facilitar a montagem da query sql de uma forma mais facil e limpa
-
-|---------------------------------------------------------------------------------| 
-
-- nodemailer
-Ultilizada para conectar a API com o servidor SMTP para envio de email'sdk
-
-|---------------------------------------------------------------------------------| 
-
-- bcrypt
-Ultilizada para criptografar a senha do usuario, trazendo mais segurança a API
-
-- jsonwebtoken
-Usado para autenticação &autorização do usuario, deixando a API mais segura.
-
-=======
-- Pedidos: Permite gerenciar pedidos dos clientes. Os usuários podem criar novos pedidos, atualizar o status dos pedidos, visualizar detalhes dos pedidos e excluir pedidos.
-
-- Cadastro e Login de Usuário: A API também possui funcionalidades para o cadastro de novos usuários e login de usuários existentes. Isso permite que os usuários acessem o sistema e realizem suas tarefas.
-
-## Bibliotecas ultilizadas; 
-
 - Express: 
 - Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
 
@@ -110,7 +51,6 @@ Ultilizada para criptografar a senha do usuario, trazendo mais segurança a API
 - Jsonwebtoken:
   Usado para autenticação &autorização do usuario, deixando a API mais segura
 
->>>>>>> 92af266f4e91118180d6218f286e6ac1d93d28df
 ## Listar Categorias
 
 #### `GET` `/categoria`
