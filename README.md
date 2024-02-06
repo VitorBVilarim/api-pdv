@@ -16,8 +16,6 @@
 
 - Cadastro e Login de Usuário: A API também possui funcionalidades para o cadastro de novos usuários e login de usuários existentes. Isso permite que os usuários acessem o sistema e realizem suas tarefas.
 
-- Produtos: Permite gerenciar o inventário de produtos. Os usuários podem adicionar novos produtos, atualizar informações de produtos existentes, ler informações de produtos e excluir produtos do sistema.
-
 ## Bibliotecas ultilizadas; 
 
 - express 
