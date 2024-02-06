@@ -9,7 +9,6 @@
  ## Funcionalidades 
 
 - Clientes: Permite a criação, leitura, atualização e exclusão de informações dos clientes. 
-<<<<<<< HEAD
 
 - Produtos: Permite gerenciar o inventário de produtos. Os usuários podem adicionar novos produtos, atualizar informações de produtos existentes, ler informações de produtos e excluir produtos do sistema.
 
