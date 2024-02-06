@@ -21,12 +21,9 @@
 - express 
 Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
 |---------------------------------------------------------------------------------| 
-=======
->>>>>>> 92af266f4e91118180d6218f286e6ac1d93d28df
 
 - Produtos: Permite gerenciar o inventário de produtos. Os usuários podem adicionar novos produtos, atualizar informações de produtos existentes, ler informações de produtos e excluir produtos do sistema.
 
-<<<<<<< HEAD
 - dotenv
 Ultilizada para gerenciar as variaveis de ambiente dentro do projeto
 |---------------------------------------------------------------------------------| 
