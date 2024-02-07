@@ -1,7 +1,7 @@
 
 ## PDV ( Ponto de Venda )
 
-- API REST que serve como uma interface para a frente de caixa de um negócio. Ela possui várias funcionalidades essenciais para a operação de um negócio, incluindo                 
+- API REST que serve como uma interface para a frente de caixa de um negócio. Ela possui várias funcionalidades essenciais para a operação de um negócio.                 
  
  ## Link de Deploy da API para testes
  - http://ec2-15-229-4-157.sa-east-1.compute.amazonaws.com:3000/
