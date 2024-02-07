@@ -215,7 +215,7 @@ Essa é a rota que será utilizada para cadastrar um novo pedido no sistema.
 **Observação:** Cada pedido deverá conter ao menos um produto vinculado.
 
 **Atenção:** As propriedades produto_id e quantidade_produto devem ser informadas dentro de um array e para cada produto deverá ser criado um objeto neste array, como ilustrado no objeto de requisição abaixo.
-Só deverá será cadastrado o pedido caso todos produtos vinculados ao pedido realmente existão no banco de dados.
+Só vai ser cadastrado o pedido caso todos produtos vinculados ao pedido realmente existão no banco de dados.
 
 
 -  Exemplo de Corpo da requisição para cadastro de pedido (body)
