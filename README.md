@@ -18,8 +18,7 @@
 
 ## Bibliotecas ultilizadas; 
 
-- Express: 
-- Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
+- Express: - Utilizada para iniciar o servidor de forma mais simples e robusta & gerir as requisições HTTP 
 
 - Dotenv:
 Ultilizada para gerenciar as variaveis de ambiente dentro do projeto
